@@ -42,7 +42,6 @@
       background: #1e293b;
       border-radius: 12px;
       padding: 22px 8px 12px 8px;
-      /* espacio arriba para login */
       text-align: center;
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
       display: flex;
@@ -328,14 +327,12 @@
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
-      /* 👈 evita bloquear clics */
       transition: all .25s ease;
     }
 
     .alerta-banio.show {
       opacity: 1;
       pointer-events: auto;
-      /* 👈 solo cuando se muestra */
     }
 
     .alerta-banio.show {
@@ -948,14 +945,11 @@ async function guardarTiemposEnReporte(nombre, infoActual) {
           timestamp: serverTimestamp()
         });
 
-        // buscar extensión
         const extension = extensiones[nombre];
 
-        // referencia agente
         const hoy = new Date().toISOString().split("T")[0];
         const refAgente = doc(db, "agentes_sabado", `${extension}_${hoy}`);
 
-        // actualizar contador
         if (tipo === "Entrante") {
 
           await updateDoc(refAgente, {
