@@ -847,7 +847,6 @@ async function guardarTiemposEnReporte(nombre, infoActual) {
     [nombre]: nuevoEstado
   });
 
-  await guardarTiemposEnReporte(nombre, nuevoEstado);
 }
 
 
@@ -900,7 +899,6 @@ async function guardarTiemposEnReporte(nombre, infoActual) {
         if (info.tipo === "almuerzo" && tAlmuerzo > LIMITE.almuerzo) { tarjetas[nombre].estado.className = "estado excedido"; tarjetas[nombre].estado.textContent = "Almuerzo excedido"; }
       });
     }, 1000);
-await guardarTiemposEnReporte(nombre, nuevoEstado);
 
     async function registrarLlamada(nombre) {
 
@@ -928,7 +926,7 @@ await guardarTiemposEnReporte(nombre, nuevoEstado);
         const extension = extensiones[nombre];
 
         // referencia agente
-        const hoy = new Date().toISOString().split("T")[0];
+const hoy = fechaLocalGT();
         const refAgente = doc(db, "agentes_sabado", `${extension}_${hoy}`);
 
         // actualizar contador
@@ -988,11 +986,11 @@ await guardarTiemposEnReporte(nombre, nuevoEstado);
           `📞⬅️ ${stats.entrantes} | 📞➡️ ${stats.salientes}`;
       });
     });
-    onSnapshot(collection(db, "agentes_sabado"), (snapshot) => {
+onSnapshot(collection(db, "agentes_sabado"), (snapshot) => {
 
-      snapshot.forEach(docSnap => {
-        const hoy = new Date().toISOString().split("T")[0];
-        if (!docSnap.id.endsWith(hoy)) return;
+  snapshot.forEach(docSnap => {
+    const hoy = fechaLocalGT();
+    if (!docSnap.id.endsWith(hoy)) return;
 
         const extension = docSnap.id.split("_")[0];
         const data = docSnap.data();
