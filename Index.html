@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Auxiliares</title>
+  <title>EIS</title>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/1302/1302539.png" type="image/png">
   <style>
     body {
@@ -42,6 +42,7 @@
       background: #1e293b;
       border-radius: 12px;
       padding: 22px 8px 12px 8px;
+      /* espacio arriba para login */
       text-align: center;
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
       display: flex;
@@ -327,12 +328,14 @@
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
+      /* 👈 evita bloquear clics */
       transition: all .25s ease;
     }
 
     .alerta-banio.show {
       opacity: 1;
       pointer-events: auto;
+      /* 👈 solo cuando se muestra */
     }
 
     .alerta-banio.show {
@@ -897,31 +900,7 @@ async function guardarTiemposEnReporte(nombre, infoActual) {
         if (info.tipo === "almuerzo" && tAlmuerzo > LIMITE.almuerzo) { tarjetas[nombre].estado.className = "estado excedido"; tarjetas[nombre].estado.textContent = "Almuerzo excedido"; }
       });
     }, 1000);
-    setInterval(async () => {
-  const ahora = Date.now() + desfaseServidor;
-
-  for (const nombre of nombres) {
-    const info = tarjetas[nombre]?.info;
-    if (!info) continue;
-
-    let tBanio = info.tiempoBanio || 0;
-    let tAlmuerzo = info.tiempoAlmuerzo || 0;
-    const inicio = info.inicio || null;
-
-    if (info.tipo === "baño" && inicio) {
-      tBanio += Math.max(0, Math.floor((ahora - inicio) / 1000));
-    }
-
-    if (info.tipo === "almuerzo" && inicio) {
-      tAlmuerzo += Math.max(0, Math.floor((ahora - inicio) / 1000));
-    }
-
-    await guardarTiemposEnReporte(nombre, {
-      tiempoBanio: tBanio,
-      tiempoAlmuerzo: tAlmuerzo
-    });
-  }
-}, 15000);
+await guardarTiemposEnReporte(nombre, nuevoEstado);
 
     async function registrarLlamada(nombre) {
 
@@ -945,11 +924,14 @@ async function guardarTiemposEnReporte(nombre, infoActual) {
           timestamp: serverTimestamp()
         });
 
+        // buscar extensión
         const extension = extensiones[nombre];
 
+        // referencia agente
         const hoy = new Date().toISOString().split("T")[0];
         const refAgente = doc(db, "agentes_sabado", `${extension}_${hoy}`);
 
+        // actualizar contador
         if (tipo === "Entrante") {
 
           await updateDoc(refAgente, {
