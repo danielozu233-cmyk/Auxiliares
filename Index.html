@@ -324,6 +324,16 @@
       padding: 12px 14px;
     }
 
+    .status.ausencia {
+      background: rgba(100, 116, 139, .20);
+      color: #e2e8f0;
+    }
+
+    .agent-main-card.state-ausencia {
+      border-color: rgba(100, 116, 139, .55);
+      box-shadow: 0 12px 26px rgba(100, 116, 139, .12);
+    }
+
     .report-card,
     .report-card * {
       -webkit-tap-highlight-color: transparent;
@@ -1782,6 +1792,7 @@
               <option value="almuerzo">En almuerzo</option>
               <option value="break">En break</option>
               <option value="disponible">Disponibles</option>
+              <option value="ausencia">Ausencia</option>
             </select>
 
             <select id="filterAgent">
@@ -1876,6 +1887,7 @@
             <option value="baño">Baño</option>
             <option value="almuerzo">Almuerzo</option>
             <option value="break">Break</option>
+            <option value="ausencia">Ausencia</option>
           </select>
         </div>
         <div class="field">
@@ -2167,6 +2179,7 @@
         baño: "En baño",
         almuerzo: "En almuerzo",
         break: "En break",
+        ausencia: "Ausencia",
         excedido: "Excedido",
         sinmarcar: "Sin marcar",
         puntual: "Puntual",
@@ -2690,12 +2703,12 @@
 
     function renderGlobalSummary(records) {
       const today = todayKey();
-      const total = records.filter(r => r.fecha === today).length;
+      const activos = records.filter(r => r.fecha === today && (r.estado || "disponible") !== "ausencia");
+      const total = activos.length;
       const enBano = records.filter(r => r.fecha === today && r.estado === "baño");
       const enAlmuerzo = records.filter(r => r.fecha === today && r.estado === "almuerzo");
       const enBreak = records.filter(r => r.fecha === today && r.estado === "break");
-      const disponibles = records.filter(r => r.fecha === today && (r.estado || "disponible") === "disponible");
-
+      const disponibles = activos.filter(r => (r.estado || "disponible") === "disponible");
       $("kpiTotal").textContent = total;
       $("kpiBano").textContent = enBano.length;
       $("kpiAlmuerzo").textContent = enAlmuerzo.length;
@@ -2815,10 +2828,11 @@
 
       const mainCard = document.querySelector(".agent-main-card");
       if (mainCard) {
-        mainCard.classList.remove("state-disponible", "state-baño", "state-almuerzo", "state-break");
+        mainCard.classList.remove("state-disponible", "state-baño", "state-almuerzo", "state-break", "state-ausencia");
         if (record.estado === "baño") mainCard.classList.add("state-baño");
         else if (record.estado === "almuerzo") mainCard.classList.add("state-almuerzo");
         else if (record.estado === "break") mainCard.classList.add("state-break");
+        else if (record.estado === "ausencia") mainCard.classList.add("state-ausencia");
         else mainCard.classList.add("state-disponible");
       }
     }
@@ -2843,8 +2857,7 @@
         if (filter === "leve" && punctuality.key !== "leve") return false;
         if (filter === "retraso" && punctuality.key !== "retraso") return false;
         if (filter === "sinmarcar" && punctuality.key !== "sinmarcar") return false;
-        if (["baño", "almuerzo", "break", "disponible"].includes(filter) && (rec.estado || "disponible") !== filter) return false;
-
+        if (["baño", "almuerzo", "break", "disponible", "ausencia"].includes(filter) && (rec.estado || "disponible") !== filter) return false;
         return true;
       }).sort((a, b) => {
         if (a.fecha === b.fecha) return String(a.ext).localeCompare(String(b.ext));
@@ -2900,10 +2913,11 @@
 <div class="status ${stateKey}">${stateKey === "baño" ? "En baño" :
             stateKey === "almuerzo" ? "En almuerzo" :
               stateKey === "break" ? "En break" :
-                stateKey === "excedido" ? "Excedido" :
-                  stateKey === "finalizado" ? "Turno finalizado" :
-                    "Disponible"
-          }</div>              </div>
+                stateKey === "ausencia" ? "Ausencia" :
+                  stateKey === "excedido" ? "Excedido" :
+                    stateKey === "finalizado" ? "Turno finalizado" :
+                      "Disponible"
+          }</div>            </div>
             </div>
 
             <div class="card-info-strip">
@@ -3095,13 +3109,16 @@
       const file = $("recordPdf").files[0];
       if (file) pdfValue = await fileToDataURL(file);
 
+      const nuevoEstado = $("recordState").value || "disponible";
+      const estadoAnterior = existing?.estado || "disponible";
+
       const payload = {
         email: emailKey(user.email),
         nombre: user.nombre,
         ext: String(user.ext),
         rol: user.rol || "agent",
         fecha,
-        estado: $("recordState").value || "disponible",
+        estado: nuevoEstado,
         estadoInicioMs: existing?.estadoInicioMs || null,
         login: $("recordLogin").value || "",
         logout: $("recordLogout").value || "",
@@ -3118,7 +3135,11 @@
         updatedAt: serverTimestamp()
       };
 
-      if (!["baño", "almuerzo", "break"].includes(payload.estado)) {
+      if (["baño", "almuerzo", "break"].includes(nuevoEstado)) {
+        if (estadoAnterior !== nuevoEstado || !existing?.estadoInicioMs) {
+          payload.estadoInicioMs = Date.now();
+        }
+      } else {
         payload.estadoInicioMs = null;
       }
 
