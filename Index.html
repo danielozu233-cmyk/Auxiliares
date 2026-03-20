@@ -1984,22 +1984,23 @@
       signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      doc,
-      setDoc,
-      getDoc,
-      getDocs,
-      updateDoc,
-      addDoc,
-      onSnapshot,
-      query,
-      where,
-      serverTimestamp,
-      increment,
-      writeBatch
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  addDoc,
+  onSnapshot,
+  query,
+  where,
+  serverTimestamp,
+  increment,
+  writeBatch,
+  getCountFromServer
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCKRB49LOhaR79NI8CwypqCMf_10GHd77k",
@@ -2473,56 +2474,66 @@
       }
     }
 
-    async function setMyStatus(nextStatus) {
-      if (!currentProfile || currentProfile.rol !== "agent") return;
-      const myRecord = getTodayRecordForCurrentAgent();
-      if (!myRecord) {
-        showToast("No se encontró tu registro de hoy.");
-        return;
-      }
+async function setMyStatus(nextStatus) {
+  if (!currentProfile || currentProfile.rol !== "agent") return;
 
-      if (nextStatus === "baño" && myRecord.estado !== "baño") {
-        const enBano = todaySummaryRecords.filter(r =>
-          r.fecha === todayKey() &&
-          r.estado === "baño" &&
-          emailKey(r.email) !== emailKey(currentProfile.email)
-        );
-        if (enBano.length >= MAX_BANO) {
-          showBathroomAlert();
-          return;
-        }
-      }
+  const myRecord = getTodayRecordForCurrentAgent();
+  if (!myRecord) {
+    showToast("No se encontró tu registro de hoy.");
+    return;
+  }
 
-      const ref = doc(db, RECORDS_COLLECTION, buildRecordId(todayKey(), currentProfile.email));
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const data = snap.data();
+  if (myRecord.logout) {
+    showToast("Ya tienes logout registrado. No puedes cambiar de estado.");
+    return;
+  }
 
-      let segundosBano = Number(data.segundosBano || 0);
-      let segundosAlmuerzo = Number(data.segundosAlmuerzo || 0);
-      let segundosBreak = Number(data.segundosBreak || 0);
+  const ref = doc(db, RECORDS_COLLECTION, buildRecordId(todayKey(), currentProfile.email));
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const data = snap.data();
 
-      if (data.estado === "baño" && data.estadoInicioMs) {
-        segundosBano += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
-      }
-      if (data.estado === "almuerzo" && data.estadoInicioMs) {
-        segundosAlmuerzo += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
-      }
-      if (data.estado === "break" && data.estadoInicioMs) {
-        segundosBreak += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
-      }
+  if (nextStatus === "baño" && data.estado !== "baño") {
+    const qBano = query(
+      collection(db, RECORDS_COLLECTION),
+      where("fecha", "==", todayKey()),
+      where("estado", "==", "baño")
+    );
 
-      const payload = {
-        estado: nextStatus,
-        estadoInicioMs: nextStatus === "disponible" ? null : Date.now(),
-        segundosBano,
-        segundosAlmuerzo,
-        segundosBreak,
-        updatedAt: serverTimestamp()
-      };
+    const countSnap = await getCountFromServer(qBano);
+    const totalEnBano = countSnap.data().count;
 
-      await updateDoc(ref, payload);
+    if (totalEnBano >= MAX_BANO) {
+      showBathroomAlert("Ya hay 2 agentes en baño. Espera a que uno regrese.");
+      return;
     }
+  }
+
+  let segundosBano = Number(data.segundosBano || 0);
+  let segundosAlmuerzo = Number(data.segundosAlmuerzo || 0);
+  let segundosBreak = Number(data.segundosBreak || 0);
+
+  if (data.estado === "baño" && data.estadoInicioMs) {
+    segundosBano += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
+  }
+  if (data.estado === "almuerzo" && data.estadoInicioMs) {
+    segundosAlmuerzo += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
+  }
+  if (data.estado === "break" && data.estadoInicioMs) {
+    segundosBreak += Math.max(0, Math.floor((Date.now() - data.estadoInicioMs) / 1000));
+  }
+
+  const payload = {
+    estado: nextStatus,
+    estadoInicioMs: ["baño", "almuerzo", "break"].includes(nextStatus) ? Date.now() : null,
+    segundosBano,
+    segundosAlmuerzo,
+    segundosBreak,
+    updatedAt: serverTimestamp()
+  };
+
+  await updateDoc(ref, payload);
+}
 
     async function registerMyCalls(tipo, cantidad) {
       if (!currentProfile || currentProfile.rol !== "agent") return;
