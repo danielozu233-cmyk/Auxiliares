@@ -3107,9 +3107,9 @@
         updatedAt: serverTimestamp()
       };
 
-      if (payload.estado !== "baño" && payload.estado !== "almuerzo") {
-        payload.estadoInicioMs = null;
-      }
+if (!["baño", "almuerzo", "break"].includes(payload.estado)) {
+  payload.estadoInicioMs = null;
+}
 
       await setDoc(doc(db, RECORDS_COLLECTION, id), payload, { merge: true });
       closeRecordModal();
