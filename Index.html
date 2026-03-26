@@ -965,6 +965,7 @@
             grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 8px;
             margin-top: 10px;
+            margin-left: 77px;
         }
 
         .agent-personal-grid .stat-box {
@@ -2406,7 +2407,7 @@
             align-items: center;
             margin-top: 14px;
             margin-bottom: 14px;
-            margin-left: 70px;
+            margin-left: 80px;
             margin-right: 70px;
             padding: 14px;
             border-radius: 20px;
@@ -2512,7 +2513,7 @@
         }
 
         .agent-profile-pill {
-            min-width: 160px;
+            min-width: 130px;
             padding: 10px 12px;
             border-radius: 14px;
             background: rgba(255, 255, 255, .05);
@@ -2586,7 +2587,7 @@
             gap: 10px;
         }
 
-        @media (max-width: 760px) {
+        @media (max-width: 300px) {
             .agent-profile-hero {
                 grid-template-columns: 1fr;
                 justify-items: center;
@@ -2625,7 +2626,7 @@
             width: 100%;
         }
 
-        .agent-panel-centered .agent-profile-hero,
+        .agent-panel-centered 
         .agent-panel-centered .agent-personal-grid,
         .agent-panel-centered .agent-bottom-grid {
             width: 100%;
@@ -2768,6 +2769,10 @@
                                                         <strong id="agHorario">-</strong>
                                                     </div>
                                                     <div class="agent-profile-pill">
+                                                        <span>Log In</span>
+                                                        <strong id="agLogin">-</strong>
+                                                    </div>
+                                                    <div class="agent-profile-pill">
                                                         <span>Puntualidad</span>
                                                         <strong id="agPuntualidad">-</strong>
                                                     </div>
@@ -2777,10 +2782,7 @@
                                     </div>
 
                                     <div class="agent-personal-grid" style="margin-top:12px;">
-                                        <div class="stat-box">
-                                            <div class="mini">Log In</div>
-                                            <div id="agLogin" style="font-size:20px;font-weight:900;">-</div>
-                                        </div>
+
                                         <div class="stat-box">
                                             <div class="mini">Entrantes</div>
                                             <div id="agEntrantes" style="font-size:20px;font-weight:900;">0</div>
