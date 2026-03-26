@@ -452,8 +452,10 @@
             background: linear-gradient(180deg, rgba(16, 29, 49, 0.98), rgba(12, 22, 37, 0.98));
             border-radius: 18px;
             padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.10);
-            box-shadow: 0 14px 28px rgba(2, 6, 23, .45);
+            border: 2px solid rgba(255, 255, 255, 0.16);
+            box-shadow:
+                0 16px 34px rgba(2, 6, 23, .52),
+                0 0 0 1px rgba(255, 255, 255, .04);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -468,8 +470,11 @@
 
         @media (hover: hover) and (pointer: fine) {
             .report-card:hover {
-                box-shadow: 0 18px 40px rgba(0, 0, 0, .46);
-                border-color: rgba(245, 158, 11, 0.18);
+                box-shadow:
+                    0 20px 44px rgba(0, 0, 0, .56),
+                    0 0 0 1px rgba(255, 166, 0, .18),
+                    0 0 22px rgba(255, 140, 66, .12);
+                border-color: rgba(255, 179, 71, 0.34);
             }
         }
 
@@ -477,11 +482,14 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 12px;
-            bottom: 12px;
-            width: 4px;
+            top: 10px;
+            bottom: 10px;
+            width: 8px;
             border-radius: 0 999px 999px 0;
-            background: linear-gradient(180deg, var(--accent), #ff8c42);
+            background: linear-gradient(180deg, #ffd34d 0%, #ff9f1a 45%, #ff5a36 100%);
+            box-shadow:
+                0 0 14px rgba(255, 140, 66, .45),
+                0 0 28px rgba(245, 158, 11, .20);
         }
 
         .card-header {
@@ -766,60 +774,132 @@
 
         .agent-main-card {
             padding: 14px;
-            border-width: 2px;
-            transition: border-color .22s ease, box-shadow .22s ease, background .22s ease;
+            border-width: 3px;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, .16);
+            transition:
+                border-color .22s ease,
+                box-shadow .22s ease,
+                background .22s ease,
+                transform .22s ease;
+            box-shadow:
+                0 18px 34px rgba(0, 0, 0, .34),
+                0 0 0 1px rgba(255, 255, 255, .03);
         }
 
         .agent-main-card.state-disponible {
-            border-color: rgba(34, 197, 94, .55);
-            box-shadow: 0 12px 26px rgba(34, 197, 94, .10);
+            border-color: rgba(34, 197, 94, .95);
+            box-shadow:
+                0 18px 36px rgba(34, 197, 94, .18),
+                0 0 0 2px rgba(34, 197, 94, .18),
+                0 0 22px rgba(34, 197, 94, .20),
+                inset 0 0 18px rgba(34, 197, 94, .05);
+            background:
+                radial-gradient(circle at top right, rgba(34, 197, 94, .10), transparent 34%),
+                linear-gradient(180deg, rgba(12, 22, 38, .98), rgba(9, 16, 28, .98));
         }
 
         .agent-main-card.state-baño {
-            border-color: rgba(59, 130, 246, .7);
-            box-shadow: 0 12px 26px rgba(59, 130, 246, .14);
-            animation: auxPulseBlue 1.05s infinite alternate;
+            border-color: rgba(59, 130, 246, 1);
+            box-shadow:
+                0 18px 36px rgba(59, 130, 246, .22),
+                0 0 0 2px rgba(59, 130, 246, .20),
+                0 0 26px rgba(59, 130, 246, .24),
+                inset 0 0 20px rgba(59, 130, 246, .06);
+            background:
+                radial-gradient(circle at top right, rgba(59, 130, 246, .14), transparent 34%),
+                linear-gradient(180deg, rgba(12, 22, 38, .98), rgba(9, 16, 28, .98));
+            animation: premiumPulseBlue 1.1s infinite alternate;
         }
 
         .agent-main-card.state-almuerzo {
-            border-color: rgba(245, 158, 11, .7);
-            box-shadow: 0 12px 26px rgba(245, 158, 11, .14);
-            animation: auxPulseYellow 1.05s infinite alternate;
+            border-color: rgba(245, 158, 11, 1);
+            box-shadow:
+                0 18px 36px rgba(245, 158, 11, .22),
+                0 0 0 2px rgba(245, 158, 11, .18),
+                0 0 26px rgba(245, 158, 11, .24),
+                inset 0 0 20px rgba(245, 158, 11, .06);
+            background:
+                radial-gradient(circle at top right, rgba(245, 158, 11, .15), transparent 34%),
+                linear-gradient(180deg, rgba(12, 22, 38, .98), rgba(9, 16, 28, .98));
+            animation: premiumPulseGold 1.1s infinite alternate;
         }
 
         .agent-main-card.state-break {
-            border-color: rgba(239, 68, 68, .7);
-            box-shadow: 0 12px 26px rgba(239, 68, 68, .14);
-            animation: auxPulseRed 1.05s infinite alternate;
+            border-color: rgba(239, 68, 68, 1);
+            box-shadow:
+                0 18px 36px rgba(239, 68, 68, .22),
+                0 0 0 2px rgba(239, 68, 68, .18),
+                0 0 26px rgba(239, 68, 68, .24),
+                inset 0 0 20px rgba(239, 68, 68, .06);
+            background:
+                radial-gradient(circle at top right, rgba(239, 68, 68, .14), transparent 34%),
+                linear-gradient(180deg, rgba(12, 22, 38, .98), rgba(9, 16, 28, .98));
+            animation: premiumPulseRed 1.1s infinite alternate;
         }
 
-        @keyframes auxPulseRed {
+        .agent-main-card.state-ausencia {
+            border-color: rgba(148, 163, 184, .78);
+            box-shadow:
+                0 16px 30px rgba(148, 163, 184, .10),
+                0 0 0 2px rgba(148, 163, 184, .08),
+                inset 0 0 16px rgba(148, 163, 184, .04);
+            background:
+                radial-gradient(circle at top right, rgba(148, 163, 184, .08), transparent 34%),
+                linear-gradient(180deg, rgba(12, 22, 38, .98), rgba(9, 16, 28, .98));
+        }
+
+        @keyframes premiumPulseBlue {
             from {
-                box-shadow: 0 10px 24px rgba(239, 68, 68, .10), 0 0 0 rgba(239, 68, 68, 0);
+                box-shadow:
+                    0 16px 32px rgba(59, 130, 246, .16),
+                    0 0 0 2px rgba(59, 130, 246, .16),
+                    0 0 14px rgba(59, 130, 246, .16),
+                    inset 0 0 16px rgba(59, 130, 246, .04);
             }
 
             to {
-                box-shadow: 0 16px 30px rgba(239, 68, 68, .20), 0 0 16px rgba(239, 68, 68, .18);
+                box-shadow:
+                    0 22px 42px rgba(59, 130, 246, .28),
+                    0 0 0 2px rgba(59, 130, 246, .22),
+                    0 0 30px rgba(59, 130, 246, .30),
+                    inset 0 0 22px rgba(59, 130, 246, .08);
             }
         }
 
-        @keyframes auxPulseYellow {
+        @keyframes premiumPulseGold {
             from {
-                box-shadow: 0 10px 24px rgba(245, 158, 11, .10), 0 0 0 rgba(245, 158, 11, 0);
+                box-shadow:
+                    0 16px 32px rgba(245, 158, 11, .16),
+                    0 0 0 2px rgba(245, 158, 11, .14),
+                    0 0 14px rgba(245, 158, 11, .16),
+                    inset 0 0 16px rgba(245, 158, 11, .04);
             }
 
             to {
-                box-shadow: 0 16px 30px rgba(245, 158, 11, .20), 0 0 16px rgba(245, 158, 11, .18);
+                box-shadow:
+                    0 22px 42px rgba(245, 158, 11, .28),
+                    0 0 0 2px rgba(245, 158, 11, .22),
+                    0 0 30px rgba(245, 158, 11, .30),
+                    inset 0 0 22px rgba(245, 158, 11, .08);
             }
         }
 
-        @keyframes auxPulseBlue {
+        @keyframes premiumPulseRed {
             from {
-                box-shadow: 0 10px 24px rgba(59, 130, 246, .10), 0 0 0 rgba(59, 130, 246, 0);
+                box-shadow:
+                    0 16px 32px rgba(239, 68, 68, .16),
+                    0 0 0 2px rgba(239, 68, 68, .14),
+                    0 0 14px rgba(239, 68, 68, .16),
+                    inset 0 0 16px rgba(239, 68, 68, .04);
             }
 
             to {
-                box-shadow: 0 16px 30px rgba(59, 130, 246, .20), 0 0 16px rgba(59, 130, 246, .18);
+                box-shadow:
+                    0 22px 42px rgba(239, 68, 68, .28),
+                    0 0 0 2px rgba(239, 68, 68, .22),
+                    0 0 30px rgba(239, 68, 68, .30),
+                    inset 0 0 22px rgba(239, 68, 68, .08);
             }
         }
 
