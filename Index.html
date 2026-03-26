@@ -2156,7 +2156,7 @@
                             <option value="all">Todos</option>
                             <option value="puntual">Puntuales</option>
                             <option value="leve">Leves (≤5 min)</option>
-                            <option value="retraso">Retraso (&gt;5 min)</option>
+                            <option value="retraso">Retrasos</option>
                             <option value="sinmarcar">Sin marcar</option>
                             <option value="baño">En baño</option>
                             <option value="almuerzo">En almuerzo</option>
@@ -3415,7 +3415,7 @@
                 const punctuality = getPunctualityInfo(rec);
                 if (filter === "puntual" && punctuality.key !== "puntual") return false;
                 if (filter === "leve" && punctuality.key !== "leve") return false;
-                if (filter === "retraso" && punctuality.key !== "retraso") return false;
+                if (filter === "retraso" && !["leve", "retraso"].includes(punctuality.key)) return false;
                 if (filter === "sinmarcar" && punctuality.key !== "sinmarcar") return false;
                 const visibleState = (rec.fecha !== todayKey() || rec.logout)
                     ? "finalizado"
