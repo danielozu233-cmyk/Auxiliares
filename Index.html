@@ -492,6 +492,18 @@
             margin-bottom: 10px;
         }
 
+        #adminFollowupsOverlay {
+            z-index: 1600;
+        }
+
+        #followupFormOverlay {
+            z-index: 1700;
+        }
+
+        #closeFollowupOverlay {
+            z-index: 1800;
+        }
+
         .avatar {
             width: 42px;
             height: 42px;
@@ -1811,16 +1823,17 @@
                 box-shadow: 0 16px 28px rgba(239, 68, 68, .22);
             }
         }
-        #closeFollowupNotes {
-    min-height: 140px;
-}
 
-.close-followup-highlight {
-    border-color: rgba(34, 197, 94, .28);
-    background:
-        radial-gradient(circle at top right, rgba(34, 197, 94, .10), transparent 34%),
-        linear-gradient(180deg, rgba(9, 24, 20, .96), rgba(7, 18, 28, .98));
-}
+        #closeFollowupNotes {
+            min-height: 140px;
+        }
+
+        .close-followup-highlight {
+            border-color: rgba(34, 197, 94, .28);
+            background:
+                radial-gradient(circle at top right, rgba(34, 197, 94, .10), transparent 34%),
+                linear-gradient(180deg, rgba(9, 24, 20, .96), rgba(7, 18, 28, .98));
+        }
     </style>
 
 </head>
@@ -1989,8 +2002,8 @@
                                     <div id="agSalientes" style="font-size:20px;font-weight:900;">0</div>
                                 </div>
                             </div>
-<br>
-<br>
+                            <br>
+                            <br>
                             <div class="agent-bottom-grid">
                                 <div class="agent-panel-block agent-call-panel">
                                     <div class="title-row compact">
@@ -2098,7 +2111,7 @@
                                     </div>
                                 </div>
                             </div>
-                                                        <div class="agent-mood-box">
+                            <div class="agent-mood-box">
                                 <div class="agent-mood-title">
                                     <div>
                                         <div class="title" style="margin:0 0 4px;">¿Cómo te sientes hoy?</div>
@@ -2438,30 +2451,32 @@
         </div>
     </div>
     <div id="closeFollowupOverlay" class="overlay">
-    <div class="modal" style="width:min(680px,96vw);">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
-            <div>
-                <h3 style="margin:0 0 4px 0;">Cerrar seguimiento</h3>
-                <div class="muted">Escribe qué se realizó para dejar constancia del cierre</div>
+        <div class="modal" style="width:min(680px,96vw);">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin:0 0 4px 0;">Cerrar seguimiento</h3>
+                    <div class="muted">Escribe qué se realizó para dejar constancia del cierre</div>
+                </div>
+                <button id="btnCloseCloseFollowupModal" class="btn-secondary">Cerrar</button>
             </div>
-            <button id="btnCloseCloseFollowupModal" class="btn-secondary">Cerrar</button>
-        </div>
 
-        <div class="field" style="margin-bottom:14px;">
-            <label>ID o nombre del seguimiento</label>
-            <input id="closeFollowupTitle" type="text" readonly />
-        </div>
+            <div class="field" style="margin-bottom:14px;">
+                <label>ID o nombre del seguimiento</label>
+                <input id="closeFollowupTitle" type="text" readonly />
+            </div>
 
-        <div class="field" style="margin-bottom:14px;">
-            <label>Notas de cierre</label>
-            <textarea id="closeFollowupNotes" placeholder="Ej. Se llamó al estudiante, se validó la información y se dio seguimiento."></textarea>
-        </div>
+            <div class="field" style="margin-bottom:14px;">
+                <label>Notas de cierre</label>
+                <textarea id="closeFollowupNotes"
+                    placeholder="Ej. Se llamó al estudiante, se validó la información y se dio seguimiento."></textarea>
+            </div>
 
-        <div class="actions" style="justify-content:flex-end;">
-            <button id="btnConfirmCloseFollowup" class="btn-green">Confirmar cierre</button>
+            <div class="actions" style="justify-content:flex-end;">
+                <button id="btnConfirmCloseFollowup" class="btn-green">Confirmar cierre</button>
+            </div>
         </div>
     </div>
-</div>
     <div id="toast" class="toast"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2594,7 +2609,7 @@
         let dayWatcherTimer = null;
         let activeOperationalDay = todayKey();
         let pendingCloseFollowupId = "";
-let pendingCloseFollowupItem = null;
+        let pendingCloseFollowupItem = null;
 
         const toastEl = $("toast");
 
@@ -3903,10 +3918,13 @@ let pendingCloseFollowupItem = null;
           <div class="followup-item-head">
             <div>
               <div class="followup-item-title">${esc(item.idObservacion || "Sin ID")}</div>
-              <div class="followup-item-meta">
-                  Límite: ${esc(formatFollowupDeadline(item))} • Creado: ${esc(formatCreatedAtText(item))}
-              </div>
-              ${isAdmin ? `<div class="followup-item-meta">Agente: ${esc(item.agentName || "-")} • Ext ${esc(item.ext || "-")}</div>` : ""}
+        <div class="followup-item-meta">
+             Límite: ${esc(formatFollowupDeadline(item))} • Creado: ${esc(formatCreatedAtText(item))}
+            </div>
+<div class="followup-item-meta" style="color:#c4b5fd;font-weight:800;">
+    👤 Asignado por: ${esc(item.createdByName || "No indicado")}
+</div>
+                ${isAdmin ? `<div class="followup-item-meta">Agente: ${esc(item.agentName || "-")} • Ext ${esc(item.ext || "-")}</div>` : ""}
             </div>
             <div class="followup-status-badge ${badgeClass}">${badgeText}</div>
           </div>
@@ -4046,9 +4064,10 @@ let pendingCloseFollowupItem = null;
             const select = $("followupAgentSelect");
             const options = accessUsers
                 .filter(u => u.rol === "agent")
-                .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
+                .sort((a, b) => Number(a.ext || 0) - Number(b.ext || 0))
                 .map(u => `<option value="${esc(u.email)}">${esc(u.nombre)} — ${esc(u.ext || "-")}</option>`)
                 .join("");
+
             select.innerHTML = options || `<option value="">Sin agentes</option>`;
         }
 
@@ -4095,52 +4114,52 @@ let pendingCloseFollowupItem = null;
         function closeFollowupForm() {
             $("followupFormOverlay").classList.remove("show");
         }
-function openCloseFollowupModal(followupId) {
-    const item = [...agentFollowups, ...adminFollowups].find(f => f.id === followupId);
-    if (!item || isFollowupClosed(item)) return;
+        function openCloseFollowupModal(followupId) {
+            const item = [...agentFollowups, ...adminFollowups].find(f => f.id === followupId);
+            if (!item || isFollowupClosed(item)) return;
 
-    pendingCloseFollowupId = followupId;
-    pendingCloseFollowupItem = item;
+            pendingCloseFollowupId = followupId;
+            pendingCloseFollowupItem = item;
 
-    $("closeFollowupTitle").value = item.idObservacion || "Sin ID";
-    $("closeFollowupNotes").value = "";
-    $("closeFollowupOverlay").classList.add("show");
+            $("closeFollowupTitle").value = item.idObservacion || "Sin ID";
+            $("closeFollowupNotes").value = "";
+            $("closeFollowupOverlay").classList.add("show");
 
-    setTimeout(() => {
-        $("closeFollowupNotes").focus();
-    }, 60);
-}
+            setTimeout(() => {
+                $("closeFollowupNotes").focus();
+            }, 60);
+        }
 
-function closeCloseFollowupModal() {
-    pendingCloseFollowupId = "";
-    pendingCloseFollowupItem = null;
-    $("closeFollowupTitle").value = "";
-    $("closeFollowupNotes").value = "";
-    $("closeFollowupOverlay").classList.remove("show");
-}
+        function closeCloseFollowupModal() {
+            pendingCloseFollowupId = "";
+            pendingCloseFollowupItem = null;
+            $("closeFollowupTitle").value = "";
+            $("closeFollowupNotes").value = "";
+            $("closeFollowupOverlay").classList.remove("show");
+        }
 
-async function confirmCloseFollowup() {
-    if (!pendingCloseFollowupId || !pendingCloseFollowupItem) return;
+        async function confirmCloseFollowup() {
+            if (!pendingCloseFollowupId || !pendingCloseFollowupItem) return;
 
-    const texto = $("closeFollowupNotes").value.trim();
-    if (!texto) {
-        showToast("Debes escribir una nota de cierre.");
-        $("closeFollowupNotes").focus();
-        return;
-    }
+            const texto = $("closeFollowupNotes").value.trim();
+            if (!texto) {
+                showToast("Debes escribir una nota de cierre.");
+                $("closeFollowupNotes").focus();
+                return;
+            }
 
-    await updateDoc(doc(db, FOLLOWUPS_COLLECTION, pendingCloseFollowupId), {
-        estado: "closed",
-        cerradoEn: todayKey(),
-        cerradoHora: nowTimeHM(),
-        cierreNotas: texto,
-        closedBy: emailKey(currentProfile?.email || ""),
-        closedByName: currentProfile?.nombre || currentUser?.displayName || ""
-    });
+            await updateDoc(doc(db, FOLLOWUPS_COLLECTION, pendingCloseFollowupId), {
+                estado: "closed",
+                cerradoEn: todayKey(),
+                cerradoHora: nowTimeHM(),
+                cierreNotas: texto,
+                closedBy: emailKey(currentProfile?.email || ""),
+                closedByName: currentProfile?.nombre || currentUser?.displayName || ""
+            });
 
-    closeCloseFollowupModal();
-    showToast("Seguimiento cerrado correctamente.");
-}
+            closeCloseFollowupModal();
+            showToast("Seguimiento cerrado correctamente.");
+        }
         async function saveFollowup() {
             const mode = $("btnSaveFollowup").dataset.mode || "agent";
             const idObservacion = $("followupObsId").value.trim();
@@ -4203,9 +4222,9 @@ async function confirmCloseFollowup() {
             showToast("Seguimiento guardado correctamente.");
         }
 
-function closeFollowupById(followupId) {
-    openCloseFollowupModal(followupId);
-}
+        function closeFollowupById(followupId) {
+            openCloseFollowupModal(followupId);
+        }
 
         function bindFollowupCloseButtons() {
             document.querySelectorAll(".btn-close-followup").forEach(btn => {
@@ -4358,12 +4377,12 @@ function closeFollowupById(followupId) {
         $("agentFollowupsOverlay").addEventListener("click", (e) => {
             if (e.target === $("agentFollowupsOverlay")) closeAgentFollowups();
         });
-$("btnCloseCloseFollowupModal").addEventListener("click", closeCloseFollowupModal);
-$("btnConfirmCloseFollowup").addEventListener("click", confirmCloseFollowup);
+        $("btnCloseCloseFollowupModal").addEventListener("click", closeCloseFollowupModal);
+        $("btnConfirmCloseFollowup").addEventListener("click", confirmCloseFollowup);
 
-$("closeFollowupOverlay").addEventListener("click", (e) => {
-    if (e.target === $("closeFollowupOverlay")) closeCloseFollowupModal();
-});
+        $("closeFollowupOverlay").addEventListener("click", (e) => {
+            if (e.target === $("closeFollowupOverlay")) closeCloseFollowupModal();
+        });
         $("adminFollowupsOverlay").addEventListener("click", (e) => {
             if (e.target === $("adminFollowupsOverlay")) closeAdminFollowups();
         });
@@ -4412,11 +4431,11 @@ $("closeFollowupOverlay").addEventListener("click", (e) => {
         document.querySelectorAll(".mood-btn").forEach(btn => {
             btn.addEventListener("click", () => saveMyMood(btn.dataset.mood, btn.dataset.emoji));
         });
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && $("closeFollowupOverlay").classList.contains("show")) {
-        closeCloseFollowupModal();
-    }
-});
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && $("closeFollowupOverlay").classList.contains("show")) {
+                closeCloseFollowupModal();
+            }
+        });
         bootStaticUI();
     </script>
 </body>
