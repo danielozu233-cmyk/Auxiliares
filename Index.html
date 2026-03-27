@@ -5459,19 +5459,6 @@
         $("recordModalOverlay").addEventListener("click", (e) => { if (e.target === $("recordModalOverlay")) closeRecordModal(); });
         $("pdfModalOverlay").addEventListener("click", (e) => { if (e.target === $("pdfModalOverlay")) closePdf(); });
         $("accessModalOverlay").addEventListener("click", (e) => { if (e.target === $("accessModalOverlay")) closeAccessModal(); });
-        $("btnUploadMyPhoto").addEventListener("click", () => {
-            $("agentPhotoInput").click();
-        });
-
-        $("agentPhotoInput").addEventListener("change", async (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                await saveMyProfilePhoto(file);
-            }
-            e.target.value = "";
-        });
-
-        $("btnRemoveMyPhoto").addEventListener("click", removeMyProfilePhoto);
 
         document.querySelectorAll(".mood-btn").forEach(btn => {
             btn.addEventListener("click", () => saveMyMood(btn.dataset.mood, btn.dataset.emoji));
@@ -5480,21 +5467,6 @@
             if (e.key === "Escape" && $("closeFollowupOverlay").classList.contains("show")) {
                 closeCloseFollowupModal();
             }
-        });
-        $("btnUploadMyPhoto").addEventListener("click", () => {
-            $("agentPhotoInput").click();
-        });
-
-        $("agentPhotoInput").addEventListener("change", async (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                await saveMyProfilePhoto(file);
-            }
-            e.target.value = "";
-        });
-
-        $("btnRemoveMyPhoto").addEventListener("click", async () => {
-            await removeMyProfilePhoto();
         });
         bootStaticUI();
     </script>
