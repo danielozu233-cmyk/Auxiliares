@@ -2924,76 +2924,77 @@
             background: #020617;
             border: 1px solid rgba(255, 255, 255, .08);
         }
+
         .state-views-btn {
-    width: 100%;
-    justify-content: center;
-    font-weight: 900;
-}
+            width: 100%;
+            justify-content: center;
+            font-weight: 900;
+        }
 
-.state-viewer-person {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
-}
+        .state-viewer-person {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
 
-.state-viewer-person-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-}
+        .state-viewer-person-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
 
-.state-viewer-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    object-fit: cover;
-    border: 1px solid rgba(255,255,255,.12);
-    flex-shrink: 0;
-}
+        .state-viewer-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, .12);
+            flex-shrink: 0;
+        }
 
-.state-viewer-avatar-fallback {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    font-weight: 900;
-    color: #fff;
-    background:
-        radial-gradient(circle at top, rgba(59,130,246,.28), transparent 45%),
-        linear-gradient(135deg, #1d4ed8, #0f172a);
-    border: 1px solid rgba(255,255,255,.12);
-    flex-shrink: 0;
-}
+        .state-viewer-avatar-fallback {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            color: #fff;
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
+                linear-gradient(135deg, #1d4ed8, #0f172a);
+            border: 1px solid rgba(255, 255, 255, .12);
+            flex-shrink: 0;
+        }
 
-.state-viewer-person-name {
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.2;
-}
+        .state-viewer-person-name {
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.2;
+        }
 
-.state-viewer-person-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 3px;
-    line-height: 1.3;
-}
+        .state-viewer-person-meta {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+            line-height: 1.3;
+        }
 
-.state-viewer-empty {
-    padding: 18px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
-    color: var(--muted);
-    text-align: center;
-    font-weight: 700;
-}
+        .state-viewer-empty {
+            padding: 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted);
+            text-align: center;
+            font-weight: 700;
+        }
     </style>
 
 </head>
@@ -3753,24 +3754,26 @@
                 <button id="btnCloseStateViewer" class="btn-secondary">Cerrar</button>
             </div>
             <div id="stateViewersOverlay" class="overlay">
-    <div class="modal summary-list-modal" style="width:min(720px,96vw);">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
-            <div>
-                <h3 style="margin:0 0 4px 0;">Vistas del estado</h3>
-                <div class="muted">Personas que ya vieron este estado</div>
+                <div class="modal summary-list-modal" style="width:min(720px,96vw);">
+                    <div
+                        style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                        <div>
+                            <h3 style="margin:0 0 4px 0;">Vistas del estado</h3>
+                            <div class="muted">Personas que ya vieron este estado</div>
+                        </div>
+                        <button id="btnCloseStateViewers" class="btn-secondary">Cerrar</button>
+                    </div>
+
+                    <div id="stateViewersList" class="summary-list-body"></div>
+                </div>
             </div>
-            <button id="btnCloseStateViewers" class="btn-secondary">Cerrar</button>
-        </div>
-
-        <div id="stateViewersList" class="summary-list-body"></div>
-    </div>
-</div>
             <div id="stateViewerImageWrap" style="margin-bottom:12px;"></div>
-<div id="stateViewerText" class="note">-</div>
+            <div id="stateViewerText" class="note">-</div>
 
-<button type="button" id="stateViewerViewsBtn" class="btn-secondary state-views-btn" style="margin-top:12px;">
-    👁️ 0 vistas
-</button>
+            <button type="button" id="stateViewerViewsBtn" class="btn-secondary state-views-btn"
+                style="margin-top:12px;">
+                👁️ 0 vistas
+            </button>
         </div>
     </div>
     <div id="toast" class="toast"></div>
@@ -6051,7 +6054,12 @@
         $("btnCloseStateCreator").addEventListener("click", closeStateCreator);
         $("btnSaveState").addEventListener("click", saveState);
         $("btnCloseStateViewer").addEventListener("click", closeStateViewer);
-            
+        $("stateViewerViewsBtn").addEventListener("click", openStateViewersModal);
+        $("btnCloseStateViewers").addEventListener("click", closeStateViewersModal);
+
+        $("stateViewersOverlay").addEventListener("click", (e) => {
+            if (e.target === $("stateViewersOverlay")) closeStateViewersModal();
+        });
         $("stateCreatorOverlay").addEventListener("click", (e) => {
             if (e.target === $("stateCreatorOverlay")) closeStateCreator();
         });
@@ -6105,12 +6113,56 @@
         function isStateExpired(item) {
             return !item?.expiresAtMs || Date.now() > Number(item.expiresAtMs);
         }
-
-        function hasSeenState(item) {
-            const myEmail = emailKey(currentProfile?.email || "");
-            return Boolean(item?.views?.[myEmail]);
+        function getSafeViewKey(email) {
+            return emailKey(email).replaceAll(".", "__dot__");
         }
 
+        function normalizeStateViews(rawViews = {}) {
+            const rows = [];
+
+            function walk(node, path = []) {
+                if (!node || typeof node !== "object") return;
+
+                const isLeaf =
+                    Object.prototype.hasOwnProperty.call(node, "vistoEn") ||
+                    Object.prototype.hasOwnProperty.call(node, "nombre") ||
+                    Object.prototype.hasOwnProperty.call(node, "email");
+
+                if (isLeaf) {
+                    const rebuiltEmail = node.email
+                        ? emailKey(node.email)
+                        : path.join(".").replaceAll("__dot__", ".");
+
+                    rows.push({
+                        email: rebuiltEmail,
+                        nombre: node.nombre || "",
+                        vistoEn: Number(node.vistoEn || 0)
+                    });
+                    return;
+                }
+
+                Object.entries(node).forEach(([key, value]) => {
+                    walk(value, [...path, key]);
+                });
+            }
+
+            walk(rawViews, []);
+
+            const unique = new Map();
+            rows.forEach(v => {
+                if (!v.email) return;
+                unique.set(v.email, v);
+            });
+
+            return [...unique.values()].sort((a, b) => Number(b.vistoEn || 0) - Number(a.vistoEn || 0));
+        }
+        function hasSeenState(item) {
+            const myEmail = emailKey(currentProfile?.email || "");
+            if (!myEmail) return false;
+
+            const views = normalizeStateViews(item?.views || {});
+            return views.some(v => emailKey(v.email) === myEmail);
+        }
         function renderAgentStates() {
             const box = $("agentStatesList");
             if (!box) return;
@@ -6255,19 +6307,24 @@
                 : "";
             $("stateViewerText").textContent = item.text || "Sin texto";
 
-const currentViews = item.views || {};
-const viewCount = Object.keys(currentViews).length;
+            const normalizedViews = normalizeStateViews(item.views || {});
+            const viewCount = normalizedViews.length;
 
-$("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+            $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
 
             $("stateViewerOverlay").classList.add("show");
 
             const myEmail = emailKey(currentProfile?.email || "");
             if (!myEmail) return;
 
-            if (!currentViews[myEmail]) {
+            const alreadySeen = normalizedViews.some(v => emailKey(v.email) === myEmail);
+
+            if (!alreadySeen) {
+                const safeKey = getSafeViewKey(myEmail);
+
                 await updateDoc(doc(db, STATES_COLLECTION, stateId), {
-                    [`views.${myEmail}`]: {
+                    [`views.${safeKey}`]: {
+                        email: myEmail,
                         nombre: currentProfile?.nombre || "",
                         vistoEn: Date.now()
                     },
@@ -6275,89 +6332,82 @@ $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount ==
                 });
             }
         }
-function getUserByEmail(email) {
-    return accessUsers.find(u => emailKey(u.email) === emailKey(email)) || null;
-}
+        function getUserByEmail(email) {
+            return accessUsers.find(u => emailKey(u.email) === emailKey(email)) || null;
+        }
 
-function formatViewDate(ms) {
-    if (!ms) return "-";
-    const d = new Date(ms);
-    return d.toLocaleString("es-GT", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-}
+        function formatViewDate(ms) {
+            if (!ms) return "-";
+            const d = new Date(ms);
+            return d.toLocaleString("es-GT", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
 
-function renderStateViewersModal(stateId) {
-    const item = agentStates.find(s => s.id === stateId);
-    const box = $("stateViewersList");
-    if (!box || !item) return;
+        function renderStateViewersModal(stateId) {
+            const item = agentStates.find(s => s.id === stateId);
+            const box = $("stateViewersList");
+            if (!box || !item) return;
 
-    const entries = Object.entries(item.views || {})
-        .sort((a, b) => Number(b[1]?.vistoEn || 0) - Number(a[1]?.vistoEn || 0));
+            const views = normalizeStateViews(item.views || {});
 
-    if (!entries.length) {
-        box.innerHTML = `<div class="state-viewer-empty">Nadie ha visto este estado todavía.</div>`;
-        return;
-    }
+            if (!views.length) {
+                box.innerHTML = `<div class="state-viewer-empty">Nadie ha visto este estado todavía.</div>`;
+                return;
+            }
 
-    box.innerHTML = entries.map(([email, viewData]) => {
-        const user = getUserByEmail(email);
-        const name = user?.nombre || viewData?.nombre || email || "Usuario";
-        const ext = user?.ext || "-";
-        const photo = user?.fotoBase64 || user?.fotoPerfil || user?.profilePhoto || "";
-        const seenAt = formatViewDate(viewData?.vistoEn);
+            box.innerHTML = views.map(view => {
+                const user = getUserByEmail(view.email);
+                const name = user?.nombre || view.nombre || "Usuario";
+                const photo = user?.fotoBase64 || user?.fotoPerfil || user?.profilePhoto || "";
 
-        return `
+                return `
             <div class="state-viewer-person">
                 <div class="state-viewer-person-left">
                     ${photo
                         ? `<img src="${photo}" class="state-viewer-avatar" alt="${esc(name)}" />`
                         : `<div class="state-viewer-avatar-fallback">${esc(getInitials(name))}</div>`
                     }
-                    <div>
-                        <div class="state-viewer-person-name">${esc(name)}</div>
-                        <div class="state-viewer-person-meta">Ext ${esc(ext)} • ${esc(email)}</div>
-                    </div>
+                    <div class="state-viewer-person-name">${esc(name)}</div>
                 </div>
-                <div class="state-viewer-person-meta">${esc(seenAt)}</div>
             </div>
         `;
-    }).join("");
-}
-
-function openStateViewersModal() {
-    if (!activeStateViewerId) return;
-    renderStateViewersModal(activeStateViewerId);
-    $("stateViewersOverlay").classList.add("show");
-}
-
-function closeStateViewersModal() {
-    $("stateViewersOverlay").classList.remove("show");
-}
-async function subscribeStates() {
-    if (unsubStates) unsubStates();
-
-    unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
-        agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderAgentStates();
-
-        if ($("stateViewerOverlay")?.classList.contains("show") && activeStateViewerId) {
-            const refreshed = agentStates.find(s => s.id === activeStateViewerId);
-            if (refreshed && !isStateExpired(refreshed)) {
-                const viewCount = Object.keys(refreshed.views || {}).length;
-                $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
-            }
+            }).join("");
         }
 
-        if ($("stateViewersOverlay")?.classList.contains("show") && activeStateViewerId) {
+        function openStateViewersModal() {
+            if (!activeStateViewerId) return;
             renderStateViewersModal(activeStateViewerId);
+            $("stateViewersOverlay").classList.add("show");
         }
-    }, err => console.error(err));
-}
+
+        function closeStateViewersModal() {
+            $("stateViewersOverlay").classList.remove("show");
+        }
+        async function subscribeStates() {
+            if (unsubStates) unsubStates();
+
+            unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
+                agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderAgentStates();
+
+                if ($("stateViewerOverlay")?.classList.contains("show") && activeStateViewerId) {
+                    const refreshed = agentStates.find(s => s.id === activeStateViewerId);
+                    if (refreshed && !isStateExpired(refreshed)) {
+                        const viewCount = normalizeStateViews(refreshed.views || {}).length;
+                        $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+                    }
+                }
+
+                if ($("stateViewersOverlay")?.classList.contains("show") && activeStateViewerId) {
+                    renderStateViewersModal(activeStateViewerId);
+                }
+            }, err => console.error(err));
+        }
         bootStaticUI();
     </script>
 </body>
