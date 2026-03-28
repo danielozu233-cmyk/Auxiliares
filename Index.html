@@ -2400,6 +2400,8 @@
             display: block;
         }
 
+
+
         .agent-profile-hero {
             display: grid;
             grid-template-columns: auto minmax(0, 1fr);
@@ -2678,7 +2680,9 @@
             font-size: 14px;
             font-weight: 900;
             color: #fff;
-            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
+                linear-gradient(135deg, #1d4ed8, #0f172a);
         }
 
         .summary-list-info {
@@ -2757,6 +2761,58 @@
             .access-photo-admin-head {
                 align-items: flex-start;
             }
+        }
+
+        .summary-list-mood {
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #f8fafc;
+            background: linear-gradient(180deg, rgba(139, 92, 246, .18), rgba(59, 130, 246, .10));
+            border: 1px solid rgba(255, 255, 255, .10);
+            width: fit-content;
+        }
+
+        .photo-wrap,
+        .summary-photo-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .mood-corner {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            line-height: 1;
+            z-index: 3;
+
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            min-width: auto;
+            width: auto;
+            height: auto;
+            padding: 0;
+        }
+
+        .mood-corner.show {
+            display: flex;
+        }
+
+        .summary-photo-wrap .mood-corner {
+            top: -4px;
+            left: -4px;
+            font-size: 15px;
         }
     </style>
 
@@ -2870,16 +2926,18 @@
                                         <h2 class="title" style="margin-bottom:6px;">Mi panel</h2>
                                         <div class="muted">Tu vista personal de operaciones del día</div>
                                         <div class="agent-profile-hero">
-                                            <button type="button" id="agentPhotoHoldArea"
-                                                class="agent-photo-shell agent-photo-trigger"
-                                                title="Click para opciones">
-                                                <img id="agentPhotoImg" class="agent-photo-img hidden"
-                                                    alt="Foto de perfil" />
-                                                <div id="agentPhotoFallback" class="agent-photo-fallback">?</div>
-                                            </button>
+                                            <div class="photo-wrap">
+                                                <div id="profileMoodBadge" class="mood-corner" title=""></div>
 
+                                                <button type="button" id="agentPhotoHoldArea"
+                                                    class="agent-photo-shell agent-photo-trigger"
+                                                    title="Click para opciones">
+                                                    <img id="agentPhotoImg" class="agent-photo-img hidden"
+                                                        alt="Foto de perfil" />
+                                                    <div id="agentPhotoFallback" class="agent-photo-fallback">?</div>
+                                                </button>
+                                            </div>
                                             <input id="agentPhotoInput" type="file" accept="image/*" class="hidden" />
-
                                             <div class="agent-profile-main">
                                                 <div class="agent-profile-main-top">
                                                     <div class="agent-profile-name-wrap">
@@ -3550,7 +3608,7 @@
             { nombre: "Alejandro Vásquez", ext: 8006, days: { 1: "09:00", 2: "09:00", 3: "08:00", 4: "08:00", 5: "08:00", 6: "07:00" } },
             { nombre: "Joselyne Velásquez", ext: 8007, default: "09:00", sabado: "09:00" },
             { nombre: "Jackeline Castillo", ext: 8008, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Mildred Cordero", ext: 8009, default: "08:00", sabado: "09:00" },
+            { nombre: "Mildred Cordero", ext: 8009, default: "08:00", sabado: "07:00" },
             { nombre: "Tania de León", ext: 8010, days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
             { nombre: "Anthony García", ext: 8011, default: "09:00", sabado: "09:00" },
             { nombre: "Jorge Veliz", ext: 8013, default: "09:00", sabado: "09:00" },
@@ -3602,7 +3660,13 @@
             clearTimeout(showToast._t);
             showToast._t = setTimeout(() => toastEl.classList.remove("show"), ms);
         }
-
+        function getMoodInfoByEmail(email) {
+            const rec = todaySummaryRecords.find(r => emailKey(r.email) === emailKey(email));
+            return {
+                mood: rec?.estadoAnimo || "",
+                emoji: rec?.estadoAnimoEmoji || ""
+            };
+        }
 
         function showBathroomAlert(message = "Espere a que otro agente regrese del baño.") {
             const wrap = $("bathroomAlert");
@@ -4440,9 +4504,18 @@
             $("infoTodayDate").textContent = `Fecha operativa: ${today}`;
 
             window.__summaryGroups = {
-                "baño": enBano,
-                "almuerzo": enAlmuerzo,
-                "break": enBreak
+                "baño": enBano.map(r => {
+                    const user = accessUsers.find(u => emailKey(u.email) === emailKey(r.email)) || {};
+                    return { ...r, photo: user.photo || user.foto || "" };
+                }),
+                "almuerzo": enAlmuerzo.map(r => {
+                    const user = accessUsers.find(u => emailKey(u.email) === emailKey(r.email)) || {};
+                    return { ...r, photo: user.photo || user.foto || "" };
+                }),
+                "break": enBreak.map(r => {
+                    const user = accessUsers.find(u => emailKey(u.email) === emailKey(r.email)) || {};
+                    return { ...r, photo: user.photo || user.foto || "" };
+                })
             };
         }
 
@@ -4504,6 +4577,13 @@
             if (agTiempoBreak) agTiempoBreak.textContent = formatSeconds(liveAccumulatedSeconds(record, "break"));
 
             updateMoodUI(record);
+            const profileMoodBadge = $("profileMoodBadge");
+            if (profileMoodBadge) {
+                const emoji = record?.estadoAnimoEmoji || "";
+                profileMoodBadge.textContent = emoji;
+                profileMoodBadge.classList.toggle("show", !!emoji);
+                profileMoodBadge.title = record?.estadoAnimo || "";
+            }
             updateAgentTimerHighlights(!record.logout ? (record.estado || "") : "");
 
             const p = getPunctualityInfo(record);
@@ -4997,6 +5077,7 @@
             const user = accessUsers.find(u => emailKey(u.email) === emailKey(email));
             return user?.fotoBase64 || "";
         }
+
         function openSummaryList(type) {
             const groups = window.__summaryGroups || {};
             const items = groups[type] || [];
@@ -5016,30 +5097,35 @@
                 body.innerHTML = items.map(item => {
                     const foto = getProfilePhotoByEmail(item.email);
                     const inicial = esc((item.nombre || "?").charAt(0).toUpperCase());
-
                     return `
-                <div class="summary-list-item">
-                    <div class="summary-list-left">
-                        <div class="summary-list-avatar-wrap">
-                            ${foto
+    <div class="summary-list-item">
+        <div class="summary-list-left">
+            <div class="summary-photo-wrap">
+                <div class="mood-corner ${item.estadoAnimoEmoji ? "show" : ""}" title="${esc(item.estadoAnimo || "")}">
+                    ${esc(item.estadoAnimoEmoji || "")}
+                </div>
+
+                <div class="summary-list-avatar-wrap">
+                    ${foto
                             ? `<img src="${foto}" alt="${esc(item.nombre || "Agente")}" class="summary-list-avatar">`
                             : `<div class="summary-list-avatar-fallback">${inicial}</div>`
                         }
-                        </div>
-
-                        <div class="summary-list-info">
-                            <div class="summary-list-item-name">${esc(item.nombre || "-")}</div>
-                            <div class="summary-list-item-meta">
-                                Ext ${esc(item.ext || "-")} • ${esc(item.email || "")}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mini-badge">
-                        ${type === "baño" ? "🚻 Baño" : type === "almuerzo" ? "🍔 Almuerzo" : "☕ Break"}
-                    </div>
                 </div>
-            `;
+            </div>
+
+            <div class="summary-list-info">
+                <div class="summary-list-item-name">${esc(item.nombre || "-")}</div>
+                <div class="summary-list-item-meta">
+                    Ext ${esc(item.ext || "-")} • ${esc(item.email || "")}
+                </div>
+            </div>
+        </div>
+
+        <div class="mini-badge">
+            ${type === "baño" ? "🚻 Baño" : type === "almuerzo" ? "🍔 Almuerzo" : "☕ Break"}
+        </div>
+    </div>
+`;
                 }).join("");
             }
 
