@@ -1591,9 +1591,10 @@
 
         .agent-bottom-grid {
             display: grid;
-            grid-template-columns: 1.05fr .95fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
             margin-top: 14px;
+            align-items: stretch;
         }
 
         .followup-panel {
@@ -2008,7 +2009,7 @@
         }
 
         .agent-bottom-grid>.agent-panel-block {
-            height: 100%;
+            height: 95%;
         }
 
         .agent-info-list {
@@ -2814,6 +2815,115 @@
             left: -4px;
             font-size: 15px;
         }
+
+        .agent-state-add-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            padding: 0;
+            font-size: 12px;
+            font-weight: 900;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(180deg, #60a5fa, #2563eb);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .16);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, .22);
+            z-index: 4;
+        }
+
+        .agent-states-panel {
+            border-color: rgba(96, 165, 250, .18);
+            box-shadow:
+                0 14px 26px rgba(59, 130, 246, .08),
+                inset 0 1px 0 rgba(255, 255, 255, .04);
+        }
+
+        .agent-states-list {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .agent-states-list::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .agent-states-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .12);
+            border-radius: 999px;
+        }
+
+        .agent-state-item {
+            min-width: 74px;
+            max-width: 74px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .agent-state-avatar-wrap {
+            width: 64px;
+            height: 64px;
+            padding: 3px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #60a5fa, #2563eb);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, .18);
+            flex-shrink: 0;
+        }
+
+        .agent-state-avatar-wrap.viewed {
+            background: linear-gradient(180deg, #64748b, #334155);
+            box-shadow: none;
+        }
+
+        .agent-state-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 999px;
+            object-fit: cover;
+            display: block;
+            background: #0f172a;
+        }
+
+        .agent-state-avatar-fallback {
+            width: 100%;
+            height: 100%;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+        }
+
+        .agent-state-name {
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .state-viewer-image {
+            width: 100%;
+            max-height: 440px;
+            object-fit: contain;
+            border-radius: 16px;
+            display: block;
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
     </style>
 
 </head>
@@ -2928,14 +3038,18 @@
                                         <div class="agent-profile-hero">
                                             <div class="photo-wrap">
                                                 <div id="profileMoodBadge" class="mood-corner" title=""></div>
-
                                                 <button type="button" id="agentPhotoHoldArea"
                                                     class="agent-photo-shell agent-photo-trigger"
                                                     title="Click para opciones">
                                                     <img id="agentPhotoImg" class="agent-photo-img hidden"
                                                         alt="Foto de perfil" />
+                                                    <button type="button" id="btnOpenStateCreator"
+                                                        class="agent-state-add-btn" title="Publicar estado">
+                                                        +
+                                                    </button>
                                                     <div id="agentPhotoFallback" class="agent-photo-fallback">?</div>
                                                 </button>
+
                                             </div>
                                             <input id="agentPhotoInput" type="file" accept="image/*" class="hidden" />
                                             <div class="agent-profile-main">
@@ -3056,6 +3170,17 @@
                                                 </div>
                                             </div>
                                             <div id="agentFollowupAlertBanner" class="followup-alert-banner"></div>
+                                        </div>
+                                        <div class="agent-panel-block agent-states-panel">
+                                            <div class="title-row compact">
+                                                <div>
+                                                    <h2 class="title" style="margin-bottom:6px;">Estados de agentes</h2>
+                                                    <div class="muted">Publicaciones activas de las últimas 24 horas
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="agentStatesList" class="agent-states-list"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -3518,6 +3643,50 @@
             </div>
         </div>
     </div>
+    <div id="stateCreatorOverlay" class="overlay">
+        <div class="modal" style="width:min(760px,96vw);">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin:0 0 4px 0;">Publicar estado</h3>
+                    <div class="muted">Tu estado durará 24 horas</div>
+                </div>
+                <button id="btnCloseStateCreator" class="btn-secondary">Cerrar</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field full">
+                    <label>Imagen del estado</label>
+                    <input id="stateImageInput" type="file" accept="image/*" />
+                </div>
+
+                <div class="field full">
+                    <label>Texto</label>
+                    <textarea id="stateTextInput" placeholder="Escribe algo para tu estado..."></textarea>
+                </div>
+            </div>
+
+            <div class="actions" style="justify-content:flex-end;">
+                <button id="btnSaveState" class="btn-primary">Publicar estado</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="stateViewerOverlay" class="overlay">
+        <div class="modal" style="width:min(760px,96vw);">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 id="stateViewerTitle" style="margin:0 0 4px 0;">Estado</h3>
+                    <div id="stateViewerMeta" class="muted">-</div>
+                </div>
+                <button id="btnCloseStateViewer" class="btn-secondary">Cerrar</button>
+            </div>
+
+            <div id="stateViewerImageWrap" style="margin-bottom:12px;"></div>
+            <div id="stateViewerText" class="note">-</div>
+        </div>
+    </div>
     <div id="toast" class="toast"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3572,6 +3741,7 @@
         const RECORDS_COLLECTION = "prueba_operaciones_registros";
         const CALLS_COLLECTION = "prueba_operaciones_llamadas";
         const FOLLOWUPS_COLLECTION = "prueba_operaciones_seguimientos";
+        const STATES_COLLECTION = "prueba_operaciones_estados";
         const MAX_BANO = 2;
 
         const ADMIN_PROFILES = {
@@ -3650,6 +3820,9 @@
         let activeOperationalDay = todayKey();
         let pendingCloseFollowupId = "";
         let pendingCloseFollowupItem = null;
+        let agentStates = [];
+        let unsubStates = null;
+        let activeStateViewerId = "";
         let accessPhotoBase64 = "";
         let accessPhotoMarkedForRemove = false;
         const toastEl = $("toast");
@@ -5569,6 +5742,7 @@
 
             await subscribeUsers();
             await subscribeTodaySummary();
+            await subscribeStates();
             startLiveTimer();
             startDayWatcher();
 
@@ -5606,6 +5780,8 @@
             if (user) {
                 await bootForUser(user);
             } else {
+                agentStates = [];
+                if (unsubStates) { unsubStates(); unsubStates = null; }
                 currentUser = null;
                 currentProfile = null;
                 todaySummaryRecords = [];
@@ -5782,7 +5958,18 @@
         $("btnSelectAccessPhoto").addEventListener("click", () => {
             $("accessPhotoInput").click();
         });
+        $("btnOpenStateCreator").addEventListener("click", openStateCreator);
+        $("btnCloseStateCreator").addEventListener("click", closeStateCreator);
+        $("btnSaveState").addEventListener("click", saveState);
+        $("btnCloseStateViewer").addEventListener("click", closeStateViewer);
 
+        $("stateCreatorOverlay").addEventListener("click", (e) => {
+            if (e.target === $("stateCreatorOverlay")) closeStateCreator();
+        });
+
+        $("stateViewerOverlay").addEventListener("click", (e) => {
+            if (e.target === $("stateViewerOverlay")) closeStateViewer();
+        });
         $("btnRemoveAccessPhoto").addEventListener("click", () => {
             accessPhotoBase64 = "";
             accessPhotoMarkedForRemove = true;
@@ -5820,6 +6007,190 @@
                 renderAccessProfilePhoto("", rosterAgent?.nombre || "");
             }
         });
+
+        function getProfilePhotoFromUser(email) {
+            const user = accessUsers.find(u => emailKey(u.email) === emailKey(email));
+            return user?.fotoPerfil || user?.profilePhoto || "";
+        }
+
+        function isStateExpired(item) {
+            return !item?.expiresAtMs || Date.now() > Number(item.expiresAtMs);
+        }
+
+        function hasSeenState(item) {
+            const myEmail = emailKey(currentProfile?.email || "");
+            return Boolean(item?.views?.[myEmail]);
+        }
+
+        function renderAgentStates() {
+            const box = $("agentStatesList");
+            if (!box) return;
+
+            const active = agentStates
+                .filter(item => !isStateExpired(item))
+                .sort((a, b) => Number(b.createdAtMs || 0) - Number(a.createdAtMs || 0));
+
+            if (!active.length) {
+                box.innerHTML = `<div class="followup-empty" style="min-width:100%;">No hay estados activos.</div>`;
+                return;
+            }
+
+            box.innerHTML = active.map(item => {
+                const photo = item.profilePhoto || getProfilePhotoFromUser(item.agentEmail);
+                const viewed = hasSeenState(item);
+                return `
+            <div class="agent-state-item" data-state-id="${esc(item.id)}">
+                <div class="agent-state-avatar-wrap ${viewed ? "viewed" : ""}">
+                    ${photo
+                        ? `<img src="${photo}" class="agent-state-avatar" alt="${esc(item.agentName)}" />`
+                        : `<div class="agent-state-avatar-fallback">${esc(getInitials(item.agentName))}</div>`
+                    }
+                </div>
+                <div class="agent-state-name">${esc(item.agentName || "Agente")}</div>
+            </div>
+        `;
+            }).join("");
+
+            box.querySelectorAll(".agent-state-item").forEach(el => {
+                el.addEventListener("click", () => openStateViewer(el.dataset.stateId));
+            });
+        }
+
+        function openStateCreator() {
+            $("stateImageInput").value = "";
+            $("stateTextInput").value = "";
+            $("stateCreatorOverlay").classList.add("show");
+        }
+
+        function closeStateCreator() {
+            $("stateCreatorOverlay").classList.remove("show");
+        }
+
+        function closeStateViewer() {
+            activeStateViewerId = "";
+            $("stateViewerOverlay").classList.remove("show");
+        }
+
+        async function resizeImageToBase64(file, maxSize = 1200, quality = 0.82) {
+            const dataUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            const img = await new Promise((resolve, reject) => {
+                const image = new Image();
+                image.onload = () => resolve(image);
+                image.onerror = reject;
+                image.src = dataUrl;
+            });
+
+            let { width, height } = img;
+
+            if (width > height && width > maxSize) {
+                height = Math.round((height * maxSize) / width);
+                width = maxSize;
+            } else if (height >= width && height > maxSize) {
+                width = Math.round((width * maxSize) / height);
+                height = maxSize;
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            return canvas.toDataURL("image/jpeg", quality);
+        }
+
+        async function saveState() {
+            if (!currentProfile || currentProfile.rol !== "agent") return;
+
+            const text = $("stateTextInput").value.trim();
+            const file = $("stateImageInput").files[0];
+
+            if (!file) {
+                showToast("Debes seleccionar una imagen.");
+                return;
+            }
+
+            const imageBase64 = await resizeImageToBase64(file);
+            const now = Date.now();
+            const expiresAtMs = now + (24 * 60 * 60 * 1000);
+
+            const existing = agentStates.find(s => emailKey(s.agentEmail) === emailKey(currentProfile.email) && !isStateExpired(s));
+
+            if (existing) {
+                await updateDoc(doc(db, STATES_COLLECTION, existing.id), {
+                    imageBase64,
+                    text,
+                    createdAtMs: now,
+                    expiresAtMs,
+                    profilePhoto: currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "",
+                    views: {},
+                    updatedAt: serverTimestamp()
+                });
+            } else {
+                await addDoc(collection(db, STATES_COLLECTION), {
+                    agentEmail: emailKey(currentProfile.email),
+                    agentName: currentProfile.nombre || "",
+                    ext: String(currentProfile.ext || ""),
+                    profilePhoto: currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "",
+                    imageBase64,
+                    text,
+                    createdAtMs: now,
+                    expiresAtMs,
+                    views: {},
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            }
+
+            closeStateCreator();
+            showToast("Estado publicado correctamente.");
+        }
+
+        async function openStateViewer(stateId) {
+            const item = agentStates.find(s => s.id === stateId);
+            if (!item || isStateExpired(item)) return;
+
+            activeStateViewerId = stateId;
+
+            $("stateViewerTitle").textContent = item.agentName || "Estado";
+            $("stateViewerMeta").textContent = `Ext ${item.ext || "-"} • Publicado hoy`;
+            $("stateViewerImageWrap").innerHTML = item.imageBase64
+                ? `<img src="${item.imageBase64}" class="state-viewer-image" alt="Estado" />`
+                : "";
+            $("stateViewerText").textContent = item.text || "Sin texto";
+
+            $("stateViewerOverlay").classList.add("show");
+
+            const myEmail = emailKey(currentProfile?.email || "");
+            if (!myEmail) return;
+
+            const currentViews = item.views || {};
+            if (!currentViews[myEmail]) {
+                await updateDoc(doc(db, STATES_COLLECTION, stateId), {
+                    [`views.${myEmail}`]: {
+                        nombre: currentProfile?.nombre || "",
+                        vistoEn: Date.now()
+                    },
+                    updatedAt: serverTimestamp()
+                });
+            }
+        }
+
+        async function subscribeStates() {
+            if (unsubStates) unsubStates();
+
+            unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
+                agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderAgentStates();
+            }, err => console.error(err));
+        }
         bootStaticUI();
     </script>
 </body>
