@@ -2924,6 +2924,76 @@
             background: #020617;
             border: 1px solid rgba(255, 255, 255, .08);
         }
+        .state-views-btn {
+    width: 100%;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.state-viewer-person {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.state-viewer-person-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.state-viewer-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,.12);
+    flex-shrink: 0;
+}
+
+.state-viewer-avatar-fallback {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    color: #fff;
+    background:
+        radial-gradient(circle at top, rgba(59,130,246,.28), transparent 45%),
+        linear-gradient(135deg, #1d4ed8, #0f172a);
+    border: 1px solid rgba(255,255,255,.12);
+    flex-shrink: 0;
+}
+
+.state-viewer-person-name {
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.state-viewer-person-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+.state-viewer-empty {
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    color: var(--muted);
+    text-align: center;
+    font-weight: 700;
+}
     </style>
 
 </head>
@@ -3682,9 +3752,25 @@
                 </div>
                 <button id="btnCloseStateViewer" class="btn-secondary">Cerrar</button>
             </div>
+            <div id="stateViewersOverlay" class="overlay">
+    <div class="modal summary-list-modal" style="width:min(720px,96vw);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+            <div>
+                <h3 style="margin:0 0 4px 0;">Vistas del estado</h3>
+                <div class="muted">Personas que ya vieron este estado</div>
+            </div>
+            <button id="btnCloseStateViewers" class="btn-secondary">Cerrar</button>
+        </div>
 
+        <div id="stateViewersList" class="summary-list-body"></div>
+    </div>
+</div>
             <div id="stateViewerImageWrap" style="margin-bottom:12px;"></div>
-            <div id="stateViewerText" class="note">-</div>
+<div id="stateViewerText" class="note">-</div>
+
+<button type="button" id="stateViewerViewsBtn" class="btn-secondary state-views-btn" style="margin-top:12px;">
+    👁️ 0 vistas
+</button>
         </div>
     </div>
     <div id="toast" class="toast"></div>
@@ -5012,6 +5098,9 @@
                 populateAdminFilterAgents();
                 populateFollowupAgentSelect();
 
+                // IMPORTANTE: volver a dibujar estados cuando cambian los usuarios/fotos
+                renderAgentStates();
+
                 if (currentProfile?.rol === "admin") {
                     renderAccessUsers();
                     renderAdminCards();
@@ -5962,7 +6051,7 @@
         $("btnCloseStateCreator").addEventListener("click", closeStateCreator);
         $("btnSaveState").addEventListener("click", saveState);
         $("btnCloseStateViewer").addEventListener("click", closeStateViewer);
-
+            
         $("stateCreatorOverlay").addEventListener("click", (e) => {
             if (e.target === $("stateCreatorOverlay")) closeStateCreator();
         });
@@ -6010,7 +6099,7 @@
 
         function getProfilePhotoFromUser(email) {
             const user = accessUsers.find(u => emailKey(u.email) === emailKey(email));
-            return user?.fotoPerfil || user?.profilePhoto || "";
+            return user?.fotoBase64 || user?.fotoPerfil || user?.profilePhoto || "";
         }
 
         function isStateExpired(item) {
@@ -6038,17 +6127,19 @@
             box.innerHTML = active.map(item => {
                 const photo = item.profilePhoto || getProfilePhotoFromUser(item.agentEmail);
                 const viewed = hasSeenState(item);
+                const agentName = item.agentName || "Agente";
+
                 return `
-            <div class="agent-state-item" data-state-id="${esc(item.id)}">
-                <div class="agent-state-avatar-wrap ${viewed ? "viewed" : ""}">
-                    ${photo
-                        ? `<img src="${photo}" class="agent-state-avatar" alt="${esc(item.agentName)}" />`
-                        : `<div class="agent-state-avatar-fallback">${esc(getInitials(item.agentName))}</div>`
+    <div class="agent-state-item" data-state-id="${esc(item.id)}">
+        <div class="agent-state-avatar-wrap ${viewed ? "viewed" : ""}">
+            ${photo
+                        ? `<img src="${photo}" class="agent-state-avatar" alt="${esc(agentName)}" />`
+                        : `<div class="agent-state-avatar-fallback">${esc(getInitials(agentName))}</div>`
                     }
-                </div>
-                <div class="agent-state-name">${esc(item.agentName || "Agente")}</div>
-            </div>
-        `;
+        </div>
+        <div class="agent-state-name">${esc(agentName)}</div>
+    </div>
+`;
             }).join("");
 
             box.querySelectorAll(".agent-state-item").forEach(el => {
@@ -6129,8 +6220,7 @@
                     text,
                     createdAtMs: now,
                     expiresAtMs,
-                    profilePhoto: currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "",
-                    views: {},
+                    profilePhoto: currentProfile?.fotoBase64 || currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "", views: {},
                     updatedAt: serverTimestamp()
                 });
             } else {
@@ -6138,8 +6228,7 @@
                     agentEmail: emailKey(currentProfile.email),
                     agentName: currentProfile.nombre || "",
                     ext: String(currentProfile.ext || ""),
-                    profilePhoto: currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "",
-                    imageBase64,
+                    profilePhoto: currentProfile?.fotoBase64 || currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "", imageBase64,
                     text,
                     createdAtMs: now,
                     expiresAtMs,
@@ -6166,12 +6255,16 @@
                 : "";
             $("stateViewerText").textContent = item.text || "Sin texto";
 
+const currentViews = item.views || {};
+const viewCount = Object.keys(currentViews).length;
+
+$("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+
             $("stateViewerOverlay").classList.add("show");
 
             const myEmail = emailKey(currentProfile?.email || "");
             if (!myEmail) return;
 
-            const currentViews = item.views || {};
             if (!currentViews[myEmail]) {
                 await updateDoc(doc(db, STATES_COLLECTION, stateId), {
                     [`views.${myEmail}`]: {
@@ -6182,15 +6275,89 @@
                 });
             }
         }
+function getUserByEmail(email) {
+    return accessUsers.find(u => emailKey(u.email) === emailKey(email)) || null;
+}
 
-        async function subscribeStates() {
-            if (unsubStates) unsubStates();
+function formatViewDate(ms) {
+    if (!ms) return "-";
+    const d = new Date(ms);
+    return d.toLocaleString("es-GT", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
 
-            unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
-                agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderAgentStates();
-            }, err => console.error(err));
+function renderStateViewersModal(stateId) {
+    const item = agentStates.find(s => s.id === stateId);
+    const box = $("stateViewersList");
+    if (!box || !item) return;
+
+    const entries = Object.entries(item.views || {})
+        .sort((a, b) => Number(b[1]?.vistoEn || 0) - Number(a[1]?.vistoEn || 0));
+
+    if (!entries.length) {
+        box.innerHTML = `<div class="state-viewer-empty">Nadie ha visto este estado todavía.</div>`;
+        return;
+    }
+
+    box.innerHTML = entries.map(([email, viewData]) => {
+        const user = getUserByEmail(email);
+        const name = user?.nombre || viewData?.nombre || email || "Usuario";
+        const ext = user?.ext || "-";
+        const photo = user?.fotoBase64 || user?.fotoPerfil || user?.profilePhoto || "";
+        const seenAt = formatViewDate(viewData?.vistoEn);
+
+        return `
+            <div class="state-viewer-person">
+                <div class="state-viewer-person-left">
+                    ${photo
+                        ? `<img src="${photo}" class="state-viewer-avatar" alt="${esc(name)}" />`
+                        : `<div class="state-viewer-avatar-fallback">${esc(getInitials(name))}</div>`
+                    }
+                    <div>
+                        <div class="state-viewer-person-name">${esc(name)}</div>
+                        <div class="state-viewer-person-meta">Ext ${esc(ext)} • ${esc(email)}</div>
+                    </div>
+                </div>
+                <div class="state-viewer-person-meta">${esc(seenAt)}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function openStateViewersModal() {
+    if (!activeStateViewerId) return;
+    renderStateViewersModal(activeStateViewerId);
+    $("stateViewersOverlay").classList.add("show");
+}
+
+function closeStateViewersModal() {
+    $("stateViewersOverlay").classList.remove("show");
+}
+async function subscribeStates() {
+    if (unsubStates) unsubStates();
+
+    unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
+        agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAgentStates();
+
+        if ($("stateViewerOverlay")?.classList.contains("show") && activeStateViewerId) {
+            const refreshed = agentStates.find(s => s.id === activeStateViewerId);
+            if (refreshed && !isStateExpired(refreshed)) {
+                const viewCount = Object.keys(refreshed.views || {}).length;
+                $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+            }
         }
+
+        if ($("stateViewersOverlay")?.classList.contains("show") && activeStateViewerId) {
+            renderStateViewersModal(activeStateViewerId);
+        }
+    }, err => console.error(err));
+}
         bootStaticUI();
     </script>
 </body>
