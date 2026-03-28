@@ -2336,22 +2336,6 @@
                 0 10px 20px rgba(0, 0, 0, .10);
         }
 
-        .agent-photo-shell {
-            width: 88px;
-            height: 88px;
-            min-width: 88px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, .14);
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            box-shadow:
-                0 12px 24px rgba(0, 0, 0, .18),
-                inset 0 1px 0 rgba(255, 255, 255, .05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .agent-photo-img {
             width: 100%;
             height: 100%;
@@ -2359,19 +2343,6 @@
             display: block;
         }
 
-        .agent-photo-fallback {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 900;
-            color: #fff;
-            background:
-                radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
-                linear-gradient(135deg, #1d4ed8, #0f172a);
-        }
 
         .agent-photo-meta {
             min-width: 0;
@@ -2432,20 +2403,21 @@
         }
 
         .agent-photo-shell {
+            position: relative;
             width: 92px;
             height: 92px;
             min-width: 92px;
-            border-radius: 26px;
+            border-radius: 28px;
             overflow: hidden;
             border: 2px solid rgba(255, 255, 255, .14);
             background: linear-gradient(135deg, #1e293b, #0f172a);
             box-shadow:
                 0 12px 24px rgba(0, 0, 0, .18),
                 inset 0 1px 0 rgba(255, 255, 255, .05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+            display: block;
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
         .agent-photo-shell:hover {
@@ -2457,13 +2429,18 @@
         }
 
         .agent-photo-img {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: inherit;
         }
 
         .agent-photo-fallback {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             display: flex;
@@ -2472,6 +2449,7 @@
             font-size: 28px;
             font-weight: 900;
             color: #fff;
+            border-radius: inherit;
             background:
                 radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
                 linear-gradient(135deg, #1d4ed8, #0f172a);
@@ -2818,10 +2796,10 @@
 
         .agent-state-add-btn {
             position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 24px;
-            height: 24px;
+            right: -2px;
+            top: -5px;
+            width: 20px;
+            height: 20px;
             border-radius: 999px;
             padding: 0;
             font-size: 12px;
@@ -2832,7 +2810,7 @@
             color: #fff;
             border: 1px solid rgba(255, 255, 255, .16);
             box-shadow: 0 10px 20px rgba(37, 99, 235, .22);
-            z-index: 4;
+            z-index: 3;
         }
 
         .agent-states-panel {
@@ -3109,18 +3087,19 @@
                                         <div class="agent-profile-hero">
                                             <div class="photo-wrap">
                                                 <div id="profileMoodBadge" class="mood-corner" title=""></div>
+
                                                 <button type="button" id="agentPhotoHoldArea"
                                                     class="agent-photo-shell agent-photo-trigger"
-                                                    title="Click para opciones">
+                                                    title="Mantén presionado o clic derecho para opciones">
                                                     <img id="agentPhotoImg" class="agent-photo-img hidden"
                                                         alt="Foto de perfil" />
-                                                    <button type="button" id="btnOpenStateCreator"
-                                                        class="agent-state-add-btn" title="Publicar estado">
-                                                        +
-                                                    </button>
                                                     <div id="agentPhotoFallback" class="agent-photo-fallback">?</div>
                                                 </button>
 
+                                                <button type="button" id="btnOpenStateCreator"
+                                                    class="agent-state-add-btn" title="Publicar estado">
+                                                    +
+                                                </button>
                                             </div>
                                             <input id="agentPhotoInput" type="file" accept="image/*" class="hidden" />
                                             <div class="agent-profile-main">
@@ -4356,7 +4335,6 @@
         async function ensureTodayRecordForProfile(profile) {
             if (!profile || !profile.email) return;
 
-            // admin sin registro diario
             if (profile.rol === "admin") return;
 
             const fecha = todayKey();
@@ -5101,7 +5079,6 @@
                 populateAdminFilterAgents();
                 populateFollowupAgentSelect();
 
-                // IMPORTANTE: volver a dibujar estados cuando cambian los usuarios/fotos
                 renderAgentStates();
 
                 if (currentProfile?.rol === "admin") {
