@@ -29,12 +29,10 @@
         }
 
         html,
+
         body {
             margin: 0;
             min-height: 100%;
-        }
-
-        body {
             font-family: Inter, Arial, Helvetica, sans-serif;
             background:
                 radial-gradient(circle at top, rgba(245, 158, 11, 0.14), transparent 34%),
@@ -2908,6 +2906,73 @@
             border: 1px solid rgba(255, 255, 255, .08);
         }
 
+        .state-viewer-top-text {
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, .92), rgba(15, 23, 42, .76));
+            border: 1px solid rgba(255, 255, 255, .10);
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.4;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, .16),
+                inset 0 1px 0 rgba(255, 255, 255, .04);
+            word-break: break-word;
+        }
+
+        .state-viewer-top-text.hidden {
+            display: none !important;
+        }
+
+        .state-viewer-image {
+            width: 100%;
+            max-height: 440px;
+            object-fit: contain;
+            border-radius: 16px;
+            display: block;
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .state-viewer-media {
+            position: relative;
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow:
+                0 18px 30px rgba(0, 0, 0, .20),
+                inset 0 1px 0 rgba(255, 255, 255, .03);
+        }
+
+        .state-viewer-caption {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, .82), rgba(15, 23, 42, .68));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, .10);
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.35;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, .20),
+                inset 0 1px 0 rgba(255, 255, 255, .04);
+            word-break: break-word;
+        }
+
+        .state-viewer-caption:empty {
+            display: none;
+        }
+
         .state-views-btn {
             width: 100%;
             justify-content: center;
@@ -2977,6 +3042,189 @@
             color: var(--muted);
             text-align: center;
             font-weight: 700;
+        }
+
+        .state-viewer-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .state-viewer-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .state-viewer-header-avatar-wrap {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            display: grid;
+            place-items: center;
+        }
+
+        .state-viewer-header-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .state-viewer-header-avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
+                linear-gradient(135deg, #1d4ed8, #0f172a);
+        }
+
+        .state-viewer-top-text {
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, .92), rgba(15, 23, 42, .76));
+            border: 1px solid rgba(255, 255, 255, .10);
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.4;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, .16),
+                inset 0 1px 0 rgba(255, 255, 255, .04);
+            word-break: break-word;
+        }
+
+        .state-viewer-top-text.hidden {
+            display: none !important;
+        }
+
+        .state-viewer-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .state-views-btn,
+        .state-comments-btn {
+            width: 100%;
+            justify-content: center;
+            font-weight: 900;
+        }
+
+        .state-comments-section {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .state-comments-list {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 12px;
+            max-height: 260px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .state-comment-empty {
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .state-comment-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .state-comment-avatar-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            display: grid;
+            place-items: center;
+        }
+
+        .state-comment-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .state-comment-avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #fff;
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, .28), transparent 45%),
+                linear-gradient(135deg, #1d4ed8, #0f172a);
+        }
+
+        .state-comment-body {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .state-comment-name {
+            font-size: 13px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .state-comment-text {
+            font-size: 13px;
+            color: #dbeafe;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .state-comment-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        @media (max-width: 760px) {
+
+            .state-viewer-actions-row,
+            .state-comment-form {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
@@ -3732,39 +3980,56 @@
         </div>
     </div>
 
-    <div id="stateViewerOverlay" class="overlay">
-        <div class="modal" style="width:min(760px,96vw);">
-            <div
-                style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+<div id="stateViewerOverlay" class="overlay">
+    <div class="modal" style="width:min(760px,96vw);">
+        <div class="state-viewer-topbar">
+            <div class="state-viewer-user">
+                <div id="stateViewerAvatarWrap" class="state-viewer-header-avatar-wrap"></div>
                 <div>
                     <h3 id="stateViewerTitle" style="margin:0 0 4px 0;">Estado</h3>
                     <div id="stateViewerMeta" class="muted">-</div>
                 </div>
-                <button id="btnCloseStateViewer" class="btn-secondary">Cerrar</button>
             </div>
-            <div id="stateViewersOverlay" class="overlay">
-                <div class="modal summary-list-modal" style="width:min(720px,96vw);">
-                    <div
-                        style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
-                        <div>
-                            <h3 style="margin:0 0 4px 0;">Vistas del estado</h3>
-                            <div class="muted">Personas que ya vieron este estado</div>
-                        </div>
-                        <button id="btnCloseStateViewers" class="btn-secondary">Cerrar</button>
-                    </div>
+            <button id="btnCloseStateViewer" class="btn-secondary">Cerrar</button>
+        </div>
 
-                    <div id="stateViewersList" class="summary-list-body"></div>
-                </div>
-            </div>
-            <div id="stateViewerImageWrap" style="margin-bottom:12px;"></div>
-            <div id="stateViewerText" class="note">-</div>
+        <div id="stateViewerText" class="state-viewer-top-text hidden"></div>
+        <div id="stateViewerImageWrap" style="margin-bottom:12px;"></div>
 
-            <button type="button" id="stateViewerViewsBtn" class="btn-secondary state-views-btn"
-                style="margin-top:12px;">
+        <div class="state-viewer-actions-row">
+            <button type="button" id="stateViewerViewsBtn" class="btn-secondary state-views-btn">
                 👁️ 0 vistas
             </button>
+
+            <button type="button" id="stateViewerCommentsBtn" class="btn-secondary state-comments-btn">
+                💬 0 comentarios
+            </button>
+        </div>
+
+        <div class="state-comments-section">
+            <div id="stateCommentsList" class="state-comments-list"></div>
+
+            <div class="state-comment-form">
+                <input id="stateCommentInput" type="text" placeholder="Escribe un comentario." />
+                <button id="btnSendStateComment" type="button" class="btn-blue">Comentar</button>
+            </div>
         </div>
     </div>
+</div>
+
+<div id="stateViewersOverlay" class="overlay">
+    <div class="modal summary-list-modal" style="width:min(720px,96vw);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+            <div>
+                <h3 style="margin:0 0 4px 0;">Vistas del estado</h3>
+                <div class="muted">Personas que ya vieron este estado</div>
+            </div>
+            <button id="btnCloseStateViewers" class="btn-secondary">Cerrar</button>
+        </div>
+
+        <div id="stateViewersList" class="summary-list-body"></div>
+    </div>
+</div>
     <div id="adminStatesOverlay" class="overlay">
         <div class="modal summary-list-modal" style="width:min(860px,96vw);">
             <div
@@ -3809,7 +4074,8 @@
             serverTimestamp,
             increment,
             writeBatch,
-            getCountFromServer
+            getCountFromServer,
+            arrayUnion
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -6074,6 +6340,15 @@
         $("stateViewerOverlay").addEventListener("click", (e) => {
             if (e.target === $("stateViewerOverlay")) closeStateViewer();
         });
+        $("stateViewerCommentsBtn").addEventListener("click", focusStateComments);
+        $("btnSendStateComment").addEventListener("click", saveStateComment);
+
+        $("stateCommentInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                saveStateComment();
+            }
+        });
         $("btnRemoveAccessPhoto").addEventListener("click", () => {
             accessPhotoBase64 = "";
             accessPhotoMarkedForRemove = true;
@@ -6300,6 +6575,12 @@
 
         function closeStateViewer() {
             activeStateViewerId = "";
+            $("stateViewerAvatarWrap").innerHTML = "";
+            $("stateViewerImageWrap").innerHTML = "";
+            $("stateViewerText").textContent = "";
+            $("stateViewerText").classList.add("hidden");
+            $("stateCommentsList").innerHTML = "";
+            $("stateCommentInput").value = "";
             $("stateViewerOverlay").classList.remove("show");
         }
 
@@ -6361,7 +6642,9 @@
                     text,
                     createdAtMs: now,
                     expiresAtMs,
-                    profilePhoto: currentProfile?.fotoBase64 || currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "", views: {},
+                    profilePhoto: currentProfile?.fotoBase64 || currentProfile?.fotoPerfil || currentProfile?.profilePhoto || "",
+                    views: {},
+                    comments: [],
                     updatedAt: serverTimestamp()
                 });
             } else {
@@ -6374,6 +6657,7 @@
                     createdAtMs: now,
                     expiresAtMs,
                     views: {},
+                    comments: [],
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp()
                 });
@@ -6389,17 +6673,32 @@
 
             activeStateViewerId = stateId;
 
-            $("stateViewerTitle").textContent = item.agentName || "Estado";
+            const owner = getUserByEmail(item.agentEmail);
+            const ownerName = item.agentName || owner?.nombre || "Estado";
+            const ownerPhoto = item.profilePhoto || owner?.fotoBase64 || owner?.fotoPerfil || owner?.profilePhoto || "";
+
+            $("stateViewerTitle").textContent = ownerName;
             $("stateViewerMeta").textContent = `Ext ${item.ext || "-"} • Publicado hoy`;
+
+            $("stateViewerAvatarWrap").innerHTML = ownerPhoto
+                ? `<img src="${ownerPhoto}" class="state-viewer-header-avatar" alt="${esc(ownerName)}" />`
+                : `<div class="state-viewer-header-avatar-fallback">${esc(getInitials(ownerName))}</div>`;
+
             $("stateViewerImageWrap").innerHTML = item.imageBase64
                 ? `<img src="${item.imageBase64}" class="state-viewer-image" alt="Estado" />`
                 : "";
-            $("stateViewerText").textContent = item.text || "Sin texto";
+
+            const cleanText = String(item.text || "").trim();
+            $("stateViewerText").textContent = cleanText;
+            $("stateViewerText").classList.toggle("hidden", !cleanText);
 
             const normalizedViews = normalizeStateViews(item.views || {});
             const viewCount = normalizedViews.length;
-
             $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+
+            const comments = getSortedStateComments(item);
+            $("stateViewerCommentsBtn").textContent = `💬 ${comments.length} comentario${comments.length === 1 ? "" : "s"}`;
+            renderStateComments(stateId);
 
             $("stateViewerOverlay").classList.add("show");
 
@@ -6423,6 +6722,68 @@
         }
         function getUserByEmail(email) {
             return accessUsers.find(u => emailKey(u.email) === emailKey(email)) || null;
+        }
+        function getSortedStateComments(item) {
+            return [...(item?.comments || [])].sort((a, b) => Number(a.createdAtMs || 0) - Number(b.createdAtMs || 0));
+        }
+
+        function renderStateComments(stateId) {
+            const item = agentStates.find(s => s.id === stateId);
+            const box = $("stateCommentsList");
+            if (!box || !item) return;
+
+            const comments = getSortedStateComments(item);
+
+            if (!comments.length) {
+                box.innerHTML = `<div class="state-comment-empty">Sin comentarios todavía.</div>`;
+                return;
+            }
+
+            box.innerHTML = comments.map(comment => {
+                const user = getUserByEmail(comment.email);
+                const name = user?.nombre || comment.nombre || "Usuario";
+                const photo = user?.fotoBase64 || user?.fotoPerfil || user?.profilePhoto || "";
+
+                return `
+            <div class="state-comment-item">
+                <div class="state-comment-avatar-wrap">
+                    ${photo
+                        ? `<img src="${photo}" class="state-comment-avatar" alt="${esc(name)}" />`
+                        : `<div class="state-comment-avatar-fallback">${esc(getInitials(name))}</div>`
+                    }
+                </div>
+
+                <div class="state-comment-body">
+                    <div class="state-comment-name">${esc(name)}</div>
+                    <div class="state-comment-text">${esc(comment.text || "")}</div>
+                </div>
+            </div>
+        `;
+            }).join("");
+        }
+
+        async function saveStateComment() {
+            if (!activeStateViewerId || !currentProfile) return;
+
+            const input = $("stateCommentInput");
+            const text = String(input?.value || "").trim();
+            if (!text) return;
+
+            await updateDoc(doc(db, STATES_COLLECTION, activeStateViewerId), {
+                comments: arrayUnion({
+                    email: emailKey(currentProfile.email),
+                    nombre: currentProfile.nombre || "",
+                    text,
+                    createdAtMs: Date.now()
+                }),
+                updatedAt: serverTimestamp()
+            });
+
+            input.value = "";
+        }
+
+        function focusStateComments() {
+            $("stateCommentInput")?.focus();
         }
 
         function formatViewDate(ms) {
@@ -6490,6 +6851,9 @@
                     if (refreshed && !isStateExpired(refreshed)) {
                         const viewCount = normalizeStateViews(refreshed.views || {}).length;
                         $("stateViewerViewsBtn").textContent = `👁️ ${viewCount} vista${viewCount === 1 ? "" : "s"}`;
+                        const comments = getSortedStateComments(refreshed);
+                        $("stateViewerCommentsBtn").textContent = `💬 ${comments.length} comentario${comments.length === 1 ? "" : "s"}`;
+                        renderStateComments(activeStateViewerId);
                     }
                 }
 
