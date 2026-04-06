@@ -1012,7 +1012,13 @@
         }
 
         .admin-summary-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .admin-states-summary-card {
+            cursor: pointer;
+            background: linear-gradient(180deg, rgba(139, 92, 246, .14), rgba(255, 255, 255, .03));
+            border-color: rgba(139, 92, 246, .18);
         }
 
         .summary-clickable {
@@ -1237,9 +1243,8 @@
             gap: 10px;
         }
 
-        /* SOLO ADMIN: resumen general en fila */
         #topQuickSection .summary-highlight-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             align-items: stretch;
         }
 
@@ -3059,6 +3064,11 @@
                             <div id="listaBreak" class="summary-value">Nadie</div>
                             <div id="listaBreakMeta" class="summary-sub">0 agentes</div>
                         </div>
+                        <div id="summaryCardEstadosAdmin" class="summary-highlight-box admin-states-summary-card">
+                            <div class="summary-label">📸 Estados activos</div>
+                            <div id="listaEstadosAdmin" class="summary-value">Nadie</div>
+                            <div id="listaEstadosAdminMeta" class="summary-sub">0 estados</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3753,6 +3763,20 @@
                 style="margin-top:12px;">
                 👁️ 0 vistas
             </button>
+        </div>
+    </div>
+    <div id="adminStatesOverlay" class="overlay">
+        <div class="modal summary-list-modal" style="width:min(860px,96vw);">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin:0 0 4px 0;">Estados de agentes</h3>
+                    <div class="muted">Publicaciones activas de las últimas 24 horas</div>
+                </div>
+                <button id="btnCloseAdminStates" class="btn-secondary">Cerrar</button>
+            </div>
+
+            <div id="adminStatesList" class="summary-list-body"></div>
         </div>
     </div>
     <div id="toast" class="toast"></div>
@@ -5080,6 +5104,12 @@
                 populateFollowupAgentSelect();
 
                 renderAgentStates();
+                $("summaryCardEstadosAdmin").addEventListener("click", openAdminStatesModal);
+                $("btnCloseAdminStates").addEventListener("click", closeAdminStatesModal);
+
+                $("adminStatesOverlay").addEventListener("click", (e) => {
+                    if (e.target === $("adminStatesOverlay")) closeAdminStatesModal();
+                });
 
                 if (currentProfile?.rol === "admin") {
                     renderAccessUsers();
@@ -6073,7 +6103,12 @@
                 showToast("No se pudo procesar la foto.");
             }
         });
+        $("summaryCardEstadosAdmin").addEventListener("click", openAdminStatesModal);
+        $("btnCloseAdminStates").addEventListener("click", closeAdminStatesModal);
 
+        $("adminStatesOverlay").addEventListener("click", (e) => {
+            if (e.target === $("adminStatesOverlay")) closeAdminStatesModal();
+        });
         $("accessRosterSelect").addEventListener("change", () => {
             const rosterAgent = getRosterAgentByExt($("accessRosterSelect").value);
 
@@ -6175,7 +6210,84 @@
                 el.addEventListener("click", () => openStateViewer(el.dataset.stateId));
             });
         }
+        function renderAdminStatesSummary() {
+            const active = agentStates
+                .filter(item => !isStateExpired(item))
+                .sort((a, b) => Number(b.createdAtMs || 0) - Number(a.createdAtMs || 0));
 
+            const valueEl = $("listaEstadosAdmin");
+            const metaEl = $("listaEstadosAdminMeta");
+
+            if (!valueEl || !metaEl) return;
+
+            if (!active.length) {
+                valueEl.innerHTML = `<span class="summary-empty">Nadie</span>`;
+                metaEl.textContent = "0 estados";
+                return;
+            }
+
+            const topNames = active.slice(0, 2).map(item => item.agentName || "Agente");
+            const extra = Math.max(0, active.length - topNames.length);
+
+            valueEl.innerHTML = topNames.map(name => `<span class="summary-name-line">${esc(name)}</span>`).join("");
+            metaEl.textContent = `${active.length} estado${active.length === 1 ? "" : "s"}${extra > 0 ? ` • +${extra} más` : ""}`;
+        }
+
+        function renderAdminStatesModal() {
+            const box = $("adminStatesList");
+            if (!box) return;
+
+            const active = agentStates
+                .filter(item => !isStateExpired(item))
+                .sort((a, b) => Number(b.createdAtMs || 0) - Number(a.createdAtMs || 0));
+
+            if (!active.length) {
+                box.innerHTML = `<div class="summary-list-empty">No hay estados activos.</div>`;
+                return;
+            }
+
+            box.innerHTML = active.map(item => {
+                const photo = item.profilePhoto || getProfilePhotoFromUser(item.agentEmail);
+                const text = item.text ? esc(item.text.length > 70 ? item.text.slice(0, 70) + "..." : item.text) : "Sin texto";
+
+                return `
+            <div class="summary-list-item admin-state-item" data-state-id="${esc(item.id)}">
+                <div class="summary-list-left">
+                    <div class="summary-list-avatar-wrap">
+                        ${photo
+                        ? `<img src="${photo}" alt="${esc(item.agentName || "Agente")}" class="summary-list-avatar">`
+                        : `<div class="summary-list-avatar-fallback">${esc(getInitials(item.agentName || "Agente"))}</div>`
+                    }
+                    </div>
+
+                    <div class="summary-list-info">
+                        <div class="summary-list-item-name">${esc(item.agentName || "Agente")}</div>
+                        <div class="summary-list-item-meta">Ext ${esc(item.ext || "-")}</div>
+                        <div class="summary-list-item-meta">${text}</div>
+                    </div>
+                </div>
+
+                <div class="mini-badge">Ver estado</div>
+            </div>
+        `;
+            }).join("");
+
+            box.querySelectorAll(".admin-state-item").forEach(el => {
+                el.addEventListener("click", () => {
+                    closeAdminStatesModal();
+                    openStateViewer(el.dataset.stateId);
+                });
+            });
+        }
+
+        function openAdminStatesModal() {
+            renderAdminStatesModal();
+            $("adminStatesOverlay").classList.add("show");
+        }
+
+        function closeAdminStatesModal() {
+            $("adminStatesOverlay").classList.remove("show");
+        }
         function openStateCreator() {
             $("stateImageInput").value = "";
             $("stateTextInput").value = "";
@@ -6371,6 +6483,7 @@
             unsubStates = onSnapshot(collection(db, STATES_COLLECTION), snap => {
                 agentStates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderAgentStates();
+                renderAdminStatesSummary();
 
                 if ($("stateViewerOverlay")?.classList.contains("show") && activeStateViewerId) {
                     const refreshed = agentStates.find(s => s.id === activeStateViewerId);
