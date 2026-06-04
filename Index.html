@@ -2515,7 +2515,7 @@
         }
 
         .agent-profile-pill {
-            min-width: 130px;
+            min-width: 110px;
             padding: 10px 12px;
             border-radius: 14px;
             background: rgba(255, 255, 255, .05);
@@ -2814,6 +2814,143 @@
             left: -4px;
             font-size: 15px;
         }
+
+        .reminder-trigger-btn {
+            position: absolute;
+            /* Cambiado para que no flote encima de otros elementos */
+            background: radial-gradient(circle at top, rgba(245, 158, 11, 0.2), transparent 80%), rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 14px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            right: 20px;
+            top: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            /* Evita que el botón se apapache si no hay espacio */
+        }
+
+        .reminder-trigger-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.7);
+        }
+
+        .reminder-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: linear-gradient(180deg, #f87171, #ef4444);
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+            border: 2px solid #0f1724;
+            animation: bounceBadge 2s infinite;
+        }
+
+        @keyframes bounceBadge {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-4px);
+            }
+
+            60% {
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Tarjetas dentro del modal */
+        .reminder-item {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.45;
+            color: #fef3c7;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .reminder-icon {
+            font-size: 26px;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .reminder-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+.reminder-img { 
+    max-width: 250px; /* Limita el ancho para que no se estire de más */
+    max-height: 200px; /* Limita el alto por si suben una foto muy vertical */
+    object-fit: contain; /* Asegura que la imagen no se deforme ni se recorte */
+    border-radius: 8px; 
+    margin-top: 10px; 
+    border: 1px solid rgba(255,255,255,0.1); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+    display: block;
+}
+
+        .reminder-delete {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 0;
+            margin-top: 8px;
+            font-weight: 800;
+        }
+
+        .reminder-delete:hover {
+            text-decoration: underline;
+        }
+        /* ===== Barra de Scroll Personalizada (Estilo Dark/Gold) ===== */
+.custom-scroll::-webkit-scrollbar {
+    width: 6px; /* Más delgada y sutil */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2); /* Fondo oscuro casi invisible */
+    border-radius: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.3); /* Color dorado translúcido */
+    border-radius: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 158, 11, 0.8); /* Brilla más al pasar el mouse */
+}
     </style>
 
 </head>
@@ -2925,44 +3062,56 @@
                                     <div>
                                         <h2 class="title" style="margin-bottom:6px;">Mi panel</h2>
                                         <div class="muted">Tu vista personal de operaciones del día</div>
-                                        <div class="agent-profile-hero">
-                                            <div class="photo-wrap">
-                                                <div id="profileMoodBadge" class="mood-corner" title=""></div>
+                                        <div
+                                            style="display: flex; gap: 20px; align-items: center; max-width: 1000px; margin: 0 auto;">
 
-                                                <button type="button" id="agentPhotoHoldArea"
-                                                    class="agent-photo-shell agent-photo-trigger"
-                                                    title="Click para opciones">
-                                                    <img id="agentPhotoImg" class="agent-photo-img hidden"
-                                                        alt="Foto de perfil" />
-                                                    <div id="agentPhotoFallback" class="agent-photo-fallback">?</div>
-                                                </button>
-                                            </div>
-                                            <input id="agentPhotoInput" type="file" accept="image/*" class="hidden" />
-                                            <div class="agent-profile-main">
-                                                <div class="agent-profile-main-top">
-                                                    <div class="agent-profile-name-wrap">
-                                                        <div id="agNombre" class="agent-profile-name">-</div>
-                                                        <div class="agent-profile-ext">Extensión <strong
-                                                                id="agExt">-</strong></div>
-                                                    </div>
-                                                    <div id="agEstadoBadge" class="status disponible">Disponible</div>
+                                            <div class="agent-profile-hero" style="flex: 1;">
+                                                <div class="photo-wrap">
+                                                    <div id="profileMoodBadge" class="mood-corner" title=""></div>
+                                                    <button type="button" id="agentPhotoHoldArea"
+                                                        class="agent-photo-shell agent-photo-trigger"
+                                                        title="Click para opciones">
+                                                        <img id="agentPhotoImg" class="agent-photo-img hidden"
+                                                            alt="Foto de perfil" />
+                                                        <div id="agentPhotoFallback" class="agent-photo-fallback">?
+                                                        </div>
+                                                    </button>
                                                 </div>
+                                                <input id="agentPhotoInput" type="file" accept="image/*"
+                                                    class="hidden" />
+                                                <div class="agent-profile-main">
+                                                    <div class="agent-profile-main-top">
+                                                        <div class="agent-profile-name-wrap">
+                                                            <div id="agNombre" class="agent-profile-name">-</div>
+                                                            <div class="agent-profile-ext">Extensión <strong
+                                                                    id="agExt">-</strong></div>
+                                                        </div>
+                                                        <div id="agEstadoBadge" class="status disponible">Disponible
+                                                        </div>
+                                                    </div>
+                                                    <div class="agent-profile-inline">
+                                                        <div class="agent-profile-pill">
+                                                            <span>Horario</span>
+                                                            <strong id="agHorario">-</strong>
+                                                        </div>
+                                                        <div class="agent-profile-pill">
+                                                            <span>Log In</span>
+                                                            <strong id="agLogin">-</strong>
+                                                        </div>
+                                                        <div class="agent-profile-pill">
+                                                            <span>Puntualidad</span>
+                                                            <strong id="agPuntualidad">-</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                <div class="agent-profile-inline">
-                                                    <div class="agent-profile-pill">
-                                                        <span>Horario</span>
-                                                        <strong id="agHorario">-</strong>
-                                                    </div>
-                                                    <div class="agent-profile-pill">
-                                                        <span>Log In</span>
-                                                        <strong id="agLogin">-</strong>
-                                                    </div>
-                                                    <div class="agent-profile-pill">
-                                                        <span>Puntualidad</span>
-                                                        <strong id="agPuntualidad">-</strong>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <button type="button" id="btnOpenReminders" class="reminder-trigger-btn"
+                                                title="Ver avisos del equipo">
+                                                🔔
+                                                <span id="remindersBadge" class="reminder-badge hidden">0</span>
+                                            </button>
+
                                         </div>
                                     </div>
 
@@ -3192,7 +3341,61 @@
             </section>
         </section>
     </div>
+<div id="remindersListOverlay" class="overlay">
+    <div class="modal" style="width: min(800px, 94vw);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div>
+                <h3 style="margin:0 0 4px 0; color: #fcd34d;">Avisos del Equipo</h3>
+                <div class="muted">Eventos próximos</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button id="btnOpenReminderModal" class="btn-primary mini hidden">+ Publicar</button>
+                <button id="btnCloseRemindersList" class="btn-secondary">Cerrar</button>
+            </div>
+        </div>
+        
+        <div id="activeRemindersList" class="custom-scroll" style="display:flex; flex-direction:column; gap:12px; max-height: 70vh; overflow-y:auto; padding-right: 8px;">
+            <div class="muted mini text-center">Cargando avisos...</div>
+        </div>
+    </div>
+</div>
 
+    <div id="reminderModalOverlay" class="overlay" style="z-index: 1600;">
+        <div class="modal" style="width: min(450px, 94vw);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div>
+                    <h3 style="margin:0 0 4px 0;">Publicar aviso</h3>
+                </div>
+                <button id="btnCloseReminderModal" class="btn-secondary">Cancelar</button>
+            </div>
+
+            <div class="form-grid" style="grid-template-columns: 1fr;">
+                <div class="field">
+                    <label>Detalle del evento (Cuentas, cuota, fecha)</label>
+                    <textarea id="remText" placeholder="Describe el evento..." rows="3"
+                        style="width:100%; padding:8px; border-radius:8px; background:var(--bg); color:var(--text); border:1px solid var(--line);"></textarea>
+                </div>
+                <div class="field">
+                    <label>Imagen de referencia (Opcional)</label>
+                    <input type="file" id="remImageInput" accept="image/*"
+                        style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--line); padding:6px; border-radius:6px;">
+                    <img id="remImagePreview" src=""
+                        style="max-width: 100%; max-height: 150px; border-radius: 8px; display: none; margin-top: 8px; object-fit: contain;" />
+                </div>
+                <div class="field">
+                    <label>Excluir a</label>
+                    <select id="remExcludeSelect"
+                        style="width:100%; padding:8px; border-radius:8px; background:var(--bg); color:var(--text); border:1px solid var(--line);">
+                        <option value="">No excluir a nadie</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="actions" style="margin-top: 16px; justify-content: flex-end;">
+                <button id="btnSaveReminder" class="btn-primary">Confirmar publicación</button>
+            </div>
+        </div>
+    </div>
     <div id="accessModalOverlay" class="overlay">
         <div class="modal">
             <div
@@ -5570,7 +5773,12 @@
             await subscribeTodaySummary();
             startLiveTimer();
             startDayWatcher();
+            // En bootForUser
+            const myEmailForReminders = emailKey(user.email);
+            const canPublishReminders = REMINDER_PUBLISHERS.includes(myEmailForReminders);
+            setVisible($("btnOpenReminderModal"), canPublishReminders);
 
+            await subscribeReminders();
             const hasProfile = Boolean(currentProfile && currentProfile.activo !== false);
             const isAgent = hasProfile && currentProfile?.rol === "agent";
             const isAdmin = hasProfile && currentProfile?.rol === "admin";
@@ -5696,6 +5904,180 @@
             const file = e.target.files?.[0];
             if (file) await saveMyProfilePhoto(file);
             e.target.value = "";
+        });
+        // === LÓGICA DE RECORDATORIOS Y BURBUJA ===
+        const REMINDERS_COLLECTION = "operaciones_recordatorios";
+        const REMINDER_PUBLISHERS = ["nozuna@upana.edu.gt", "aalvarado@upana.edu.gt"];
+        let teamReminders = [];
+        let unsubReminders = null;
+        let tempRemImageBase64 = "";
+
+        function populateExcludeSelect() {
+            const select = $("remExcludeSelect");
+            const options = [`<option value="">No excluir a nadie</option>`].concat(
+                accessUsers
+                    .filter(u => u.rol === "agent")
+                    .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
+                    .map(u => `<option value="${esc(u.email)}">${esc(u.nombre)}</option>`)
+            );
+            select.innerHTML = options.join("");
+        }
+
+        async function subscribeReminders() {
+            if (unsubReminders) unsubReminders();
+            const qReminders = query(collection(db, REMINDERS_COLLECTION), where("activo", "==", true));
+
+            unsubReminders = onSnapshot(qReminders, snap => {
+                teamReminders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderReminders();
+            }, err => console.error("Error al cargar recordatorios:", err));
+        }
+
+        function renderReminders() {
+            const box = $("activeRemindersList");
+            const badge = $("remindersBadge");
+            if (!box || !badge || !currentProfile) return;
+
+            const myEmail = emailKey(currentProfile.email);
+            const canPublish = REMINDER_PUBLISHERS.includes(myEmail);
+
+            // Filtrar los que no van dirigidos a mí
+            const visibleReminders = teamReminders.filter(r => emailKey(r.excluirEmail) !== myEmail);
+
+            // Calcular cuántos avisos NO he visto (usando LocalStorage)
+            const storedSeen = JSON.parse(localStorage.getItem(`seenReminders_${myEmail}`) || "[]");
+            const unseenCount = visibleReminders.filter(r => !storedSeen.includes(r.id)).length;
+
+            // Actualizar la burbuja roja
+            if (unseenCount > 0) {
+                badge.textContent = unseenCount;
+                badge.classList.remove("hidden");
+            } else {
+                badge.classList.add("hidden");
+            }
+
+            if (visibleReminders.length === 0) {
+                box.innerHTML = `<div class="muted text-center" style="padding: 20px;">No hay colectas ni avisos vigentes.</div>`;
+                return;
+            }
+
+            // Dibujar lista dentro del modal
+            box.innerHTML = visibleReminders.map(rem => `
+        <div class="reminder-item">
+            <div class="reminder-icon">🔔</div>
+            <div class="reminder-content">
+                <div style="white-space: pre-wrap; font-weight: 500;">${esc(rem.texto)}</div>
+                ${rem.imagen ? `<img src="${rem.imagen}" class="reminder-img" alt="Referencia" />` : ''}
+                <div class="mini muted" style="margin-top:8px;">Publicado: ${esc(rem.fechaPublicacion)}</div>
+                ${canPublish ? `<button class="reminder-delete" data-id="${esc(rem.id)}">Eliminar aviso</button>` : ''}
+            </div>
+        </div>
+    `).join("");
+
+            box.querySelectorAll(".reminder-delete").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const id = e.target.dataset.id;
+                    if (confirm("¿Seguro que deseas eliminar esta colecta para todo el equipo?")) {
+                        await updateDoc(doc(db, REMINDERS_COLLECTION, id), { activo: false });
+                        showToast("Aviso eliminado.");
+                    }
+                });
+            });
+        }
+
+        // ==== Eventos de apertura de modales ====
+
+        // Botón de Regalo flotante
+        $("btnOpenReminders")?.addEventListener("click", () => {
+            // Cuando abro el panel, marco TODOS los visibles como leídos
+            const myEmail = emailKey(currentProfile?.email || "");
+            const visibleReminders = teamReminders.filter(r => emailKey(r.excluirEmail) !== myEmail);
+            const allVisibleIds = visibleReminders.map(r => r.id);
+
+            localStorage.setItem(`seenReminders_${myEmail}`, JSON.stringify(allVisibleIds));
+            $("remindersBadge").classList.add("hidden"); // Oculto la burbuja
+
+            $("remindersListOverlay").classList.add("show");
+        });
+
+        $("btnCloseRemindersList")?.addEventListener("click", () => {
+            $("remindersListOverlay").classList.remove("show");
+        });
+        $("remindersListOverlay")?.addEventListener("click", (e) => {
+            if (e.target === $("remindersListOverlay")) $("remindersListOverlay").classList.remove("show");
+        });
+
+        // Botón para publicar desde dentro del listado
+        $("btnOpenReminderModal")?.addEventListener("click", () => {
+            populateExcludeSelect();
+            $("remText").value = "";
+            $("remImageInput").value = "";
+            $("remImagePreview").style.display = "none";
+            tempRemImageBase64 = "";
+            $("reminderModalOverlay").classList.add("show");
+        });
+
+        $("btnCloseReminderModal")?.addEventListener("click", () => {
+            $("reminderModalOverlay").classList.remove("show");
+        });
+        $("reminderModalOverlay")?.addEventListener("click", (e) => {
+            if (e.target === $("reminderModalOverlay")) $("reminderModalOverlay").classList.remove("show");
+        });
+
+        // Imagen a Base64
+        $("remImageInput")?.addEventListener("change", async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) {
+                tempRemImageBase64 = "";
+                $("remImagePreview").style.display = "none";
+                return;
+            }
+            try {
+                const base64 = await fileToCompressedBase64(file, 600, 0.80);
+                tempRemImageBase64 = base64;
+                $("remImagePreview").src = base64;
+                $("remImagePreview").style.display = "block";
+            } catch (error) {
+                console.error(error);
+                showToast("Error al procesar la imagen.");
+            }
+        });
+
+        // Guardar
+        $("btnSaveReminder")?.addEventListener("click", async () => {
+            const texto = $("remText").value.trim();
+            const excluirEmail = emailKey($("remExcludeSelect").value);
+
+            if (!texto) {
+                showToast("Debes escribir los detalles de la colecta.");
+                return;
+            }
+
+            try {
+                const btn = $("btnSaveReminder");
+                btn.disabled = true;
+                btn.textContent = "Publicando...";
+
+                await addDoc(collection(db, REMINDERS_COLLECTION), {
+                    texto: texto,
+                    imagen: tempRemImageBase64,
+                    excluirEmail: excluirEmail,
+                    fechaPublicacion: todayKey(),
+                    activo: true,
+                    createdBy: emailKey(currentProfile.email),
+                    createdAt: serverTimestamp()
+                });
+
+                $("reminderModalOverlay").classList.remove("show");
+                showToast("Aviso publicado a la operación.");
+            } catch (error) {
+                console.error(error);
+                showToast("Error al publicar el aviso.");
+            } finally {
+                const btn = $("btnSaveReminder");
+                btn.disabled = false;
+                btn.textContent = "Confirmar publicación";
+            }
         });
         $("btnLogin").addEventListener("click", loginMicrosoft);
         $("btnLogout").addEventListener("click", logout);
