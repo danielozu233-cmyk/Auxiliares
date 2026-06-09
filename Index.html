@@ -3383,11 +3383,12 @@
                         style="max-width: 100%; max-height: 150px; border-radius: 8px; display: none; margin-top: 8px; object-fit: contain;" />
                 </div>
                 <div class="field">
-<div class="field">
-    <label>Excluir a (Puedes seleccionar varios con Ctrl/Cmd + Click)</label>
-    <select id="remExcludeSelect" multiple style="width:100%; min-height: 100px; padding:8px; border-radius:8px; background:var(--bg); color:var(--text); border:1px solid var(--line);">
-        </select>
-</div>
+                    <label>Excluir a</label>
+                    <select id="remExcludeSelect"
+                        style="width:100%; padding:8px; border-radius:8px; background:var(--bg); color:var(--text); border:1px solid var(--line);">
+                        <option value="">No excluir a nadie</option>
+                    </select>
+                </div>
             </div>
 
             <div class="actions" style="margin-top: 16px; justify-content: flex-end;">
@@ -5921,7 +5922,6 @@
             );
             select.innerHTML = options.join("");
         }
-        
 
         async function subscribeReminders() {
             if (unsubReminders) unsubReminders();
@@ -6044,63 +6044,41 @@
         });
 
         // Guardar
-// --- 1. Al guardar el aviso ---
-$("btnSaveReminder")?.addEventListener("click", async () => {
-    const texto = $("remText").value.trim();
-    
-    // Obtenemos todos los correos seleccionados en el select multiple
-    const selectedOptions = Array.from($("remExcludeSelect").selectedOptions);
-    const excludeEmails = selectedOptions.map(opt => emailKey(opt.value));
-    
-    if (!texto) {
-        showToast("Debes escribir los detalles de la colecta.");
-        return;
-    }
+        $("btnSaveReminder")?.addEventListener("click", async () => {
+            const texto = $("remText").value.trim();
+            const excluirEmail = emailKey($("remExcludeSelect").value);
 
-    try {
-        const btn = $("btnSaveReminder");
-        btn.disabled = true;
-        btn.textContent = "Publicando...";
+            if (!texto) {
+                showToast("Debes escribir los detalles de la colecta.");
+                return;
+            }
 
-        await addDoc(collection(db, REMINDERS_COLLECTION), {
-            texto: texto,
-            imagen: tempRemImageBase64,
-            excluirEmails: excludeEmails, // Ahora guardamos un ARRAY
-            fechaPublicacion: todayKey(),
-            activo: true,
-            createdBy: emailKey(currentProfile.email),
-            createdAt: serverTimestamp()
+            try {
+                const btn = $("btnSaveReminder");
+                btn.disabled = true;
+                btn.textContent = "Publicando...";
+
+                await addDoc(collection(db, REMINDERS_COLLECTION), {
+                    texto: texto,
+                    imagen: tempRemImageBase64,
+                    excluirEmail: excluirEmail,
+                    fechaPublicacion: todayKey(),
+                    activo: true,
+                    createdBy: emailKey(currentProfile.email),
+                    createdAt: serverTimestamp()
+                });
+
+                $("reminderModalOverlay").classList.remove("show");
+                showToast("Aviso publicado a la operación.");
+            } catch (error) {
+                console.error(error);
+                showToast("Error al publicar el aviso.");
+            } finally {
+                const btn = $("btnSaveReminder");
+                btn.disabled = false;
+                btn.textContent = "Confirmar publicación";
+            }
         });
-
-        $("reminderModalOverlay").classList.remove("show");
-        showToast("Aviso publicado.");
-    } catch (error) {
-        console.error(error);
-        showToast("Error al publicar.");
-    } finally {
-        $("btnSaveReminder").disabled = false;
-        $("btnSaveReminder").textContent = "Confirmar publicación";
-    }
-});
-
-// --- 2. Al renderizar (filtrar) ---
-function renderReminders() {
-    const box = $("activeRemindersList");
-    const badge = $("remindersBadge");
-    if (!box || !badge || !currentProfile) return;
-
-    const myEmail = emailKey(currentProfile.email);
-    const canPublish = REMINDER_PUBLISHERS.includes(myEmail);
-    
-    // FILTRO: Excluir si mi email está dentro del array 'excluirEmails'
-    const visibleReminders = teamReminders.filter(r => {
-        const excludes = r.excluirEmails || []; // Maneja versiones anteriores si no tenían el array
-        return !excludes.includes(myEmail);
-    });
-
-    // ... resto del código igual ...
-    // (Asegúrate de usar 'excluirEmails' al leer desde Firestore)
-}
         $("btnLogin").addEventListener("click", loginMicrosoft);
         $("btnLogout").addEventListener("click", logout);
         $("btnDisponible").addEventListener("click", () => setMyStatus("disponible"));
