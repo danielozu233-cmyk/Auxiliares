@@ -3382,13 +3382,11 @@
                     <img id="remImagePreview" src=""
                         style="max-width: 100%; max-height: 150px; border-radius: 8px; display: none; margin-top: 8px; object-fit: contain;" />
                 </div>
-                <div class="field">
-                    <label>Excluir a</label>
-                    <select id="remExcludeSelect"
-                        style="width:100%; padding:8px; border-radius:8px; background:var(--bg); color:var(--text); border:1px solid var(--line);">
-                        <option value="">No excluir a nadie</option>
-                    </select>
-                </div>
+<div class="field">
+    <label>Excluir del aviso (No lo verán):</label>
+    <div id="remExcludeContainer" class="custom-scroll" style="max-height: 130px; overflow-y: auto; border: 1px solid var(--line); padding: 8px; border-radius: 8px; background: var(--bg); display: flex; flex-direction: column; gap: 6px;">
+        </div>
+</div>
             </div>
 
             <div class="actions" style="margin-top: 16px; justify-content: flex-end;">
@@ -5912,16 +5910,21 @@
         let unsubReminders = null;
         let tempRemImageBase64 = "";
 
-        function populateExcludeSelect() {
-            const select = $("remExcludeSelect");
-            const options = [`<option value="">No excluir a nadie</option>`].concat(
-                accessUsers
-                    .filter(u => u.rol === "agent")
-                    .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
-                    .map(u => `<option value="${esc(u.email)}">${esc(u.nombre)}</option>`)
-            );
-            select.innerHTML = options.join("");
-        }
+function populateExcludeSelect() {
+    const container = $("remExcludeContainer");
+    if (!container) return;
+    
+    // Filtramos los usuarios con rol de agente y los ordenamos alfabéticamente
+    container.innerHTML = accessUsers
+        .filter(u => u.rol === "agent")
+        .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
+        .map(u => `
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--text); margin: 0; padding: 2px 4px;">
+                <input type="checkbox" class="rem-exclude-chk" value="${esc(u.email)}" style="width: auto; margin: 0; cursor: pointer;">
+                <span>${esc(u.nombre)}</span>
+            </label>
+        `).join("");
+}
 
         async function subscribeReminders() {
             if (unsubReminders) unsubReminders();
@@ -5942,8 +5945,11 @@
             const canPublish = REMINDER_PUBLISHERS.includes(myEmail);
 
             // Filtrar los que no van dirigidos a mí
-            const visibleReminders = teamReminders.filter(r => emailKey(r.excluirEmail) !== myEmail);
-
+// Filtramos asegurando que el email del usuario logueado NO esté en la lista de excluidos
+const visibleReminders = teamReminders.filter(r => {
+    const excludes = r.excluirEmails || []; // Si es un registro viejo o vacío, por defecto es un array vacío
+    return !excludes.includes(myEmail);
+});
             // Calcular cuántos avisos NO he visto (usando LocalStorage)
             const storedSeen = JSON.parse(localStorage.getItem(`seenReminders_${myEmail}`) || "[]");
             const unseenCount = visibleReminders.filter(r => !storedSeen.includes(r.id)).length;
@@ -6043,42 +6049,44 @@
             }
         });
 
-        // Guardar
-        $("btnSaveReminder")?.addEventListener("click", async () => {
-            const texto = $("remText").value.trim();
-            const excluirEmail = emailKey($("remExcludeSelect").value);
+$("btnSaveReminder")?.addEventListener("click", async () => {
+    const texto = $("remText").value.trim();
+    
+    // Capturamos todos los checkboxes que estén marcados (checked)
+    const checkedBoxes = document.querySelectorAll(".rem-exclude-chk:checked");
+    const excludeEmails = Array.from(checkedBoxes).map(chk => emailKey(chk.value));
+    
+    if (!texto) {
+        showToast("Debes escribir los detalles de la colecta.");
+        return;
+    }
 
-            if (!texto) {
-                showToast("Debes escribir los detalles de la colecta.");
-                return;
-            }
+    try {
+        const btn = $("btnSaveReminder");
+        btn.disabled = true;
+        btn.textContent = "Publicando...";
 
-            try {
-                const btn = $("btnSaveReminder");
-                btn.disabled = true;
-                btn.textContent = "Publicando...";
-
-                await addDoc(collection(db, REMINDERS_COLLECTION), {
-                    texto: texto,
-                    imagen: tempRemImageBase64,
-                    excluirEmail: excluirEmail,
-                    fechaPublicacion: todayKey(),
-                    activo: true,
-                    createdBy: emailKey(currentProfile.email),
-                    createdAt: serverTimestamp()
-                });
-
-                $("reminderModalOverlay").classList.remove("show");
-                showToast("Aviso publicado a la operación.");
-            } catch (error) {
-                console.error(error);
-                showToast("Error al publicar el aviso.");
-            } finally {
-                const btn = $("btnSaveReminder");
-                btn.disabled = false;
-                btn.textContent = "Confirmar publicación";
-            }
+        await addDoc(collection(db, REMINDERS_COLLECTION), {
+            texto: texto,
+            imagen: tempRemImageBase64,
+            excluirEmails: excludeEmails, // Guardamos la LISTA completa de correos excluidos
+            fechaPublicacion: todayKey(),
+            activo: true,
+            createdBy: emailKey(currentProfile.email),
+            createdAt: serverTimestamp()
         });
+
+        $("reminderModalOverlay").classList.remove("show");
+        showToast("Aviso publicado a la operación.");
+    } catch (error) {
+        console.error("Error al guardar recordatorio: ", error);
+        showToast("Error al publicar el aviso.");
+    } finally {
+        const btn = $("btnSaveReminder");
+        btn.disabled = false;
+        btn.textContent = "Confirmar publicación";
+    }
+});
         $("btnLogin").addEventListener("click", loginMicrosoft);
         $("btnLogout").addEventListener("click", logout);
         $("btnDisponible").addEventListener("click", () => setMyStatus("disponible"));
