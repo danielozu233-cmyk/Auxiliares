@@ -2908,16 +2908,19 @@
             min-width: 0;
         }
 
-.reminder-img { 
-    max-width: 250px; /* Limita el ancho para que no se estire de más */
-    max-height: 200px; /* Limita el alto por si suben una foto muy vertical */
-    object-fit: contain; /* Asegura que la imagen no se deforme ni se recorte */
-    border-radius: 8px; 
-    margin-top: 10px; 
-    border: 1px solid rgba(255,255,255,0.1); 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
-    display: block;
-}
+        .reminder-img {
+            max-width: 250px;
+            /* Limita el ancho para que no se estire de más */
+            max-height: 200px;
+            /* Limita el alto por si suben una foto muy vertical */
+            object-fit: contain;
+            /* Asegura que la imagen no se deforme ni se recorte */
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: block;
+        }
 
         .reminder-delete {
             background: transparent;
@@ -2933,24 +2936,29 @@
         .reminder-delete:hover {
             text-decoration: underline;
         }
+
         /* ===== Barra de Scroll Personalizada (Estilo Dark/Gold) ===== */
-.custom-scroll::-webkit-scrollbar {
-    width: 6px; /* Más delgada y sutil */
-}
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            /* Más delgada y sutil */
+        }
 
-.custom-scroll::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2); /* Fondo oscuro casi invisible */
-    border-radius: 8px;
-}
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            /* Fondo oscuro casi invisible */
+            border-radius: 8px;
+        }
 
-.custom-scroll::-webkit-scrollbar-thumb {
-    background: rgba(245, 158, 11, 0.3); /* Color dorado translúcido */
-    border-radius: 8px;
-}
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.3);
+            /* Color dorado translúcido */
+            border-radius: 8px;
+        }
 
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(245, 158, 11, 0.8); /* Brilla más al pasar el mouse */
-}
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 158, 11, 0.8);
+            /* Brilla más al pasar el mouse */
+        }
     </style>
 
 </head>
@@ -3341,24 +3349,25 @@
             </section>
         </section>
     </div>
-<div id="remindersListOverlay" class="overlay">
-    <div class="modal" style="width: min(800px, 94vw);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-            <div>
-                <h3 style="margin:0 0 4px 0; color: #fcd34d;">Avisos del Equipo</h3>
-                <div class="muted">Eventos próximos</div>
+    <div id="remindersListOverlay" class="overlay">
+        <div class="modal" style="width: min(800px, 94vw);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <div>
+                    <h3 style="margin:0 0 4px 0; color: #fcd34d;">Avisos del Equipo</h3>
+                    <div class="muted">Eventos próximos</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button id="btnOpenReminderModal" class="btn-primary mini hidden">+ Publicar</button>
+                    <button id="btnCloseRemindersList" class="btn-secondary">Cerrar</button>
+                </div>
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button id="btnOpenReminderModal" class="btn-primary mini hidden">+ Publicar</button>
-                <button id="btnCloseRemindersList" class="btn-secondary">Cerrar</button>
+
+            <div id="activeRemindersList" class="custom-scroll"
+                style="display:flex; flex-direction:column; gap:12px; max-height: 70vh; overflow-y:auto; padding-right: 8px;">
+                <div class="muted mini text-center">Cargando avisos...</div>
             </div>
-        </div>
-        
-        <div id="activeRemindersList" class="custom-scroll" style="display:flex; flex-direction:column; gap:12px; max-height: 70vh; overflow-y:auto; padding-right: 8px;">
-            <div class="muted mini text-center">Cargando avisos...</div>
         </div>
     </div>
-</div>
 
     <div id="reminderModalOverlay" class="overlay" style="z-index: 1600;">
         <div class="modal" style="width: min(450px, 94vw);">
@@ -3382,11 +3391,12 @@
                     <img id="remImagePreview" src=""
                         style="max-width: 100%; max-height: 150px; border-radius: 8px; display: none; margin-top: 8px; object-fit: contain;" />
                 </div>
-<div class="field">
-    <label>Excluir del aviso (No lo verán):</label>
-    <div id="remExcludeContainer" class="custom-scroll" style="max-height: 130px; overflow-y: auto; border: 1px solid var(--line); padding: 8px; border-radius: 8px; background: var(--bg); display: flex; flex-direction: column; gap: 6px;">
-        </div>
-</div>
+                <div class="field">
+                    <label>Excluir del aviso (No lo verán):</label>
+                    <div id="remExcludeContainer" class="custom-scroll"
+                        style="max-height: 130px; overflow-y: auto; border: 1px solid var(--line); padding: 8px; border-radius: 8px; background: var(--bg); display: flex; flex-direction: column; gap: 6px;">
+                    </div>
+                </div>
             </div>
 
             <div class="actions" style="margin-top: 16px; justify-content: flex-end;">
@@ -3801,33 +3811,32 @@
         const ADMIN_EMAILS = Object.keys(ADMIN_PROFILES);
 
         const AGENT_ROSTER = [
-            { nombre: "Saraí Churumia", ext: 8001, days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Gabriela Jaes", ext: 8002, default: "09:00", sabado: "09:00" },
-            { nombre: "Javier Alvarez", ext: 8003, default: "08:00", sabado: "07:00" },
-            { nombre: "Merlin Bajan", ext: 8004, default: "08:00", sabado: null },
-            { nombre: "Mónica Ordóñez", ext: 8005, default: "09:00", sabado: "09:00" },
-            { nombre: "Alejandro Vásquez", ext: 8006, days: { 1: "09:00", 2: "09:00", 3: "08:00", 4: "08:00", 5: "08:00", 6: "07:00" } },
-            { nombre: "Joselyne Velásquez", ext: 8007, default: "09:00", sabado: "09:00" },
-            { nombre: "Jackeline Castillo", ext: 8008, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Mildred Cordero", ext: 8009, default: "08:00", sabado: "07:00" },
-            { nombre: "Tania de León", ext: 8010, days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Anthony García", ext: 8011, default: "09:00", sabado: "09:00" },
-            { nombre: "Jorge Veliz", ext: 8013, default: "09:00", sabado: "09:00" },
-            { nombre: "Daniel Coyoy", ext: 8014, default: "08:00", sabado: null },
-            { nombre: "Nestor Galvez", ext: 8015, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Andrea Jiménez", ext: 8016, default: "09:00", sabado: "09:00" },
-            { nombre: "Diego Chiché", ext: 8017, default: "09:00", sabado: "09:00" },
-            { nombre: "Ashley López", ext: 8018, default: "08:00", sabado: "07:00" },
-            { nombre: "Synndy Sanchez", ext: 8020, default: "09:00", sabado: "09:00" },
-            { nombre: "Mishell de León", ext: 8021, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Madelin Ovando", ext: 8023, default: "09:00", sabado: "09:00" },
-            { nombre: "Evelyn de León", ext: 8024, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Andres Marín", ext: 8025, default: "08:00", sabado: null },
-            { nombre: "Bryan Hernandez", ext: 8026, default: "09:00", sabado: "09:00" },
-            { nombre: "Rafael Sánchez", ext: 8027, days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Marta Morales", ext: 8028, days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Pablo Ibañez", ext: 8029, days: { 1: "08:00", 2: "08:00", 3: "08:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "María Perdomo", ext: 8030, default: "09:00", sabado: "09:00" }
+            { nombre: "Saraí Churumia", ext: 8001, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
+            { nombre: "Gabriela Jaes", ext: 8002, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Javier Alvarez", ext: 8003, genero: "M", default: "08:00", sabado: "07:00" },
+            { nombre: "Merlin Bajan", ext: 8004, genero: "F", default: "08:00", sabado: null },
+            { nombre: "Mónica Ordóñez", ext: 8005, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Alejandro Vásquez", ext: 8006, genero: "M", days: { 1: "09:00", 2: "09:00", 3: "08:00", 4: "08:00", 5: "08:00", 6: "07:00" } },
+            { nombre: "Joselyne Velásquez", ext: 8007, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Jackeline Castillo", ext: 8008, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
+            { nombre: "Mildred Cordero", ext: 8009, genero: "F", default: "08:00", sabado: "07:00" },
+            { nombre: "Tania de León", ext: 8010, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
+            { nombre: "Anthony García", ext: 8011, genero: "M", default: "09:00", sabado: "09:00" },
+            { nombre: "Jorge Veliz", ext: 8013, genero: "M", default: "09:00", sabado: "09:00" },
+            { nombre: "Daniel Coyoy", ext: 8014, genero: "M", default: "08:00", sabado: null },
+            { nombre: "Nestor Galvez", ext: 8015, genero: "M", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
+            { nombre: "Andrea Jiménez", ext: 8016, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Diego Chiché", ext: 8017, genero: "M", default: "09:00", sabado: "09:00" },
+            { nombre: "Ashley López", ext: 8018, genero: "F", default: "08:00", sabado: "07:00" },
+            { nombre: "Synndy Sanchez", ext: 8020, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Mishell de León", ext: 8021, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
+            { nombre: "Madelin Ovando", ext: 8023, genero: "F", default: "09:00", sabado: "09:00" },
+            { nombre: "Andres Marín", ext: 8025, genero: "M", default: "08:00", sabado: null },
+            { nombre: "Bryan Hernandez", ext: 8026, genero: "M", default: "09:00", sabado: "09:00" },
+            { nombre: "Rafael Sánchez", ext: 8027, genero: "M", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
+            { nombre: "Marta Morales", ext: 8028, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
+            { nombre: "Pablo Ibañez", ext: 8029, genero: "M", days: { 1: "08:00", 2: "08:00", 3: "08:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
+            { nombre: "María Perdomo", ext: 8030, genero: "F", default: "09:00", sabado: "09:00" }
         ];
 
         const $ = (id) => document.getElementById(id);
@@ -4406,17 +4415,28 @@
             const data = snap.data();
 
             if (nextStatus === "baño" && data.estado !== "baño") {
-                const qBano = query(
-                    collection(db, RECORDS_COLLECTION),
-                    where("fecha", "==", todayKey()),
-                    where("estado", "==", "baño")
-                );
+                // 1. Identificar el género del agente actual
+                const miAgenteRoster = getRosterAgentByExt(currentProfile.ext);
+                const miGenero = miAgenteRoster ? miAgenteRoster.genero : null;
 
-                const countSnap = await getCountFromServer(qBano);
-                const totalEnBano = countSnap.data().count;
+                if (!miGenero) {
+                    showToast("Error: No se ha configurado el género para este agente en el sistema.");
+                    return;
+                }
 
-                if (totalEnBano >= MAX_BANO) {
-                    showBathroomAlert("Ya hay 2 agentes en baño. Espera a que uno regrese.");
+                // 2. Obtener lista de agentes que están actualmente en el baño (usando memoria local)
+                const enBano = todaySummaryRecords.filter(r => r.estado === "baño" && !r.logout);
+
+                // 3. Revisar si hay alguien de mi mismo género adentro
+                const mismoGeneroEnBano = enBano.some(r => {
+                    const agenteAdentro = getRosterAgentByExt(r.ext);
+                    return agenteAdentro && agenteAdentro.genero === miGenero;
+                });
+
+                if (mismoGeneroEnBano) {
+                    // Mensaje dinámico dependiendo del género
+                    const textoGenero = miGenero === "M" ? "un hombre" : "una mujer";
+                    showBathroomAlert(`Ya hay ${textoGenero} en el baño. Por favor, espera tu turno.`);
                     return;
                 }
             }
@@ -5910,21 +5930,21 @@
         let unsubReminders = null;
         let tempRemImageBase64 = "";
 
-function populateExcludeSelect() {
-    const container = $("remExcludeContainer");
-    if (!container) return;
-    
-    // Filtramos los usuarios con rol de agente y los ordenamos alfabéticamente
-    container.innerHTML = accessUsers
-        .filter(u => u.rol === "agent")
-        .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
-        .map(u => `
+        function populateExcludeSelect() {
+            const container = $("remExcludeContainer");
+            if (!container) return;
+
+            // Filtramos los usuarios con rol de agente y los ordenamos alfabéticamente
+            container.innerHTML = accessUsers
+                .filter(u => u.rol === "agent")
+                .sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")))
+                .map(u => `
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--text); margin: 0; padding: 2px 4px;">
                 <input type="checkbox" class="rem-exclude-chk" value="${esc(u.email)}" style="width: auto; margin: 0; cursor: pointer;">
                 <span>${esc(u.nombre)}</span>
             </label>
         `).join("");
-}
+        }
 
         async function subscribeReminders() {
             if (unsubReminders) unsubReminders();
@@ -5945,11 +5965,11 @@ function populateExcludeSelect() {
             const canPublish = REMINDER_PUBLISHERS.includes(myEmail);
 
             // Filtrar los que no van dirigidos a mí
-// Filtramos asegurando que el email del usuario logueado NO esté en la lista de excluidos
-const visibleReminders = teamReminders.filter(r => {
-    const excludes = r.excluirEmails || []; // Si es un registro viejo o vacío, por defecto es un array vacío
-    return !excludes.includes(myEmail);
-});
+            // Filtramos asegurando que el email del usuario logueado NO esté en la lista de excluidos
+            const visibleReminders = teamReminders.filter(r => {
+                const excludes = r.excluirEmails || []; // Si es un registro viejo o vacío, por defecto es un array vacío
+                return !excludes.includes(myEmail);
+            });
             // Calcular cuántos avisos NO he visto (usando LocalStorage)
             const storedSeen = JSON.parse(localStorage.getItem(`seenReminders_${myEmail}`) || "[]");
             const unseenCount = visibleReminders.filter(r => !storedSeen.includes(r.id)).length;
@@ -6049,44 +6069,44 @@ const visibleReminders = teamReminders.filter(r => {
             }
         });
 
-$("btnSaveReminder")?.addEventListener("click", async () => {
-    const texto = $("remText").value.trim();
-    
-    // Capturamos todos los checkboxes que estén marcados (checked)
-    const checkedBoxes = document.querySelectorAll(".rem-exclude-chk:checked");
-    const excludeEmails = Array.from(checkedBoxes).map(chk => emailKey(chk.value));
-    
-    if (!texto) {
-        showToast("Debes escribir los detalles de la colecta.");
-        return;
-    }
+        $("btnSaveReminder")?.addEventListener("click", async () => {
+            const texto = $("remText").value.trim();
 
-    try {
-        const btn = $("btnSaveReminder");
-        btn.disabled = true;
-        btn.textContent = "Publicando...";
+            // Capturamos todos los checkboxes que estén marcados (checked)
+            const checkedBoxes = document.querySelectorAll(".rem-exclude-chk:checked");
+            const excludeEmails = Array.from(checkedBoxes).map(chk => emailKey(chk.value));
 
-        await addDoc(collection(db, REMINDERS_COLLECTION), {
-            texto: texto,
-            imagen: tempRemImageBase64,
-            excluirEmails: excludeEmails, // Guardamos la LISTA completa de correos excluidos
-            fechaPublicacion: todayKey(),
-            activo: true,
-            createdBy: emailKey(currentProfile.email),
-            createdAt: serverTimestamp()
+            if (!texto) {
+                showToast("Debes escribir los detalles de la colecta.");
+                return;
+            }
+
+            try {
+                const btn = $("btnSaveReminder");
+                btn.disabled = true;
+                btn.textContent = "Publicando...";
+
+                await addDoc(collection(db, REMINDERS_COLLECTION), {
+                    texto: texto,
+                    imagen: tempRemImageBase64,
+                    excluirEmails: excludeEmails, // Guardamos la LISTA completa de correos excluidos
+                    fechaPublicacion: todayKey(),
+                    activo: true,
+                    createdBy: emailKey(currentProfile.email),
+                    createdAt: serverTimestamp()
+                });
+
+                $("reminderModalOverlay").classList.remove("show");
+                showToast("Aviso publicado a la operación.");
+            } catch (error) {
+                console.error("Error al guardar recordatorio: ", error);
+                showToast("Error al publicar el aviso.");
+            } finally {
+                const btn = $("btnSaveReminder");
+                btn.disabled = false;
+                btn.textContent = "Confirmar publicación";
+            }
         });
-
-        $("reminderModalOverlay").classList.remove("show");
-        showToast("Aviso publicado a la operación.");
-    } catch (error) {
-        console.error("Error al guardar recordatorio: ", error);
-        showToast("Error al publicar el aviso.");
-    } finally {
-        const btn = $("btnSaveReminder");
-        btn.disabled = false;
-        btn.textContent = "Confirmar publicación";
-    }
-});
         $("btnLogin").addEventListener("click", loginMicrosoft);
         $("btnLogout").addEventListener("click", logout);
         $("btnDisponible").addEventListener("click", () => setMyStatus("disponible"));
