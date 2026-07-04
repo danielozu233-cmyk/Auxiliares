@@ -3811,32 +3811,32 @@
         const ADMIN_EMAILS = Object.keys(ADMIN_PROFILES);
 
         const AGENT_ROSTER = [
-            { nombre: "Saraí Churumia", ext: 8001, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Gabriela Jaes", ext: 8002, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Javier Alvarez", ext: 8003, genero: "M", default: "08:00", sabado: "07:00" },
-            { nombre: "Merlin Bajan", ext: 8004, genero: "F", default: "08:00", sabado: null },
-            { nombre: "Mónica Ordóñez", ext: 8005, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Alejandro Vásquez", ext: 8006, genero: "M", days: { 1: "09:00", 2: "09:00", 3: "08:00", 4: "08:00", 5: "08:00", 6: "07:00" } },
-            { nombre: "Joselyne Velásquez", ext: 8007, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Jackeline Castillo", ext: 8008, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Mildred Cordero", ext: 8009, genero: "F", default: "08:00", sabado: "07:00" },
-            { nombre: "Tania de León", ext: 8010, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Anthony García", ext: 8011, genero: "M", default: "09:00", sabado: "09:00" },
-            { nombre: "Jorge Veliz", ext: 8013, genero: "M", default: "09:00", sabado: "09:00" },
-            { nombre: "Daniel Coyoy", ext: 8014, genero: "M", default: "08:00", sabado: null },
-            { nombre: "Nestor Galvez", ext: 8015, genero: "M", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Andrea Jiménez", ext: 8016, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Diego Chiché", ext: 8017, genero: "M", default: "09:00", sabado: "09:00" },
-            { nombre: "Ashley López", ext: 8018, genero: "F", default: "08:00", sabado: "07:00" },
-            { nombre: "Synndy Sanchez", ext: 8020, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Mishell de León", ext: 8021, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Madelin Ovando", ext: 8023, genero: "F", default: "09:00", sabado: "09:00" },
-            { nombre: "Andres Marín", ext: 8025, genero: "M", default: "08:00", sabado: null },
-            { nombre: "Bryan Hernandez", ext: 8026, genero: "M", default: "09:00", sabado: "09:00" },
-            { nombre: "Rafael Sánchez", ext: 8027, genero: "M", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" } },
-            { nombre: "Marta Morales", ext: 8028, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "Pablo Ibañez", ext: 8029, genero: "M", days: { 1: "08:00", 2: "08:00", 3: "08:00", 4: "09:00", 5: "09:00", 6: "07:00" } },
-            { nombre: "María Perdomo", ext: 8030, genero: "F", default: "09:00", sabado: "09:00" }
+            { nombre: "Saraí Churumia", ext: 8001, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Gabriela Jaes", ext: 8002, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Javier Alvarez", ext: 8003, genero: "M", default: "08:00", sabado: "08:00", endDefault: "16:00", endSabado: "11:00" },
+            { nombre: "Merlin Bajan", ext: 8004, genero: "F", default: "08:00", sabado: null, endDays: { 1: "17:00", 2: "17:00", 3: "17:00", 4: "17:00", 5: "16:00" }, endSabado: null },
+            { nombre: "Mónica Ordóñez", ext: 8005, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Alejandro Vásquez", ext: 8006, genero: "M", days: { 1: "08:00", 2: "09:00", 3: "08:00", 4: "09:00", 5: "08:00", 6: "07:00" }, endDefault: "16:00", endSabado: "13:00" },
+            { nombre: "Joselyne Velásquez", ext: 8007, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Jackeline Castillo", ext: 8008, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Mildred Cordero", ext: 8009, genero: "F", default: "08:00", sabado: "08:00", endDefault: "16:00", endSabado: "11:00" },
+            { nombre: "Tania de León", ext: 8010, genero: "F", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Anthony García", ext: 8011, genero: "M", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Jorge Veliz", ext: 8013, genero: "M", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Daniel Coyoy", ext: 8014, genero: "M", default: "08:00", sabado: null, endDays: { 1: "17:00", 2: "17:00", 3: "17:00", 4: "17:00", 5: "16:00" }, endSabado: null },
+            { nombre: "Nestor Galvez", ext: 8015, genero: "M", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Andrea Jiménez", ext: 8016, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Diego Chiché", ext: 8017, genero: "M", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Ashley López", ext: 8018, genero: "F", default: "08:00", sabado: "08:00", endDefault: "16:00", endSabado: "11:00" },
+            { nombre: "Synndy Sanchez", ext: 8020, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Mishell de León", ext: 8021, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Madelin Ovando", ext: 8023, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Andres Marín", ext: 8025, genero: "M", default: "08:00", sabado: null, endDefault: "17:00", endSabado: null },
+            { nombre: "Bryan Hernandez", ext: 8026, genero: "M", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Rafael Sánchez", ext: 8027, genero: "M", days: { 1: "09:00", 2: "09:00", 3: "09:00", 4: "10:00", 5: "10:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Marta Morales", ext: 8028, genero: "F", days: { 1: "10:00", 2: "10:00", 3: "09:00", 4: "09:00", 5: "09:00", 6: "07:00" }, endDefault: "17:00", endSabado: "13:00" },
+            { nombre: "Pablo Ibañez", ext: 8029, genero: "M", days: { 1: "08:00", 2: "09:00", 3: "08:00", 4: "09:00", 5: "08:00", 6: "07:00" }, endDefault: "16:00", endSabado: "13:00" },
+            { nombre: "María Perdomo", ext: 8030, genero: "F", default: "09:00", sabado: "09:00", endDefault: "17:00", endSabado: "13:00" }
         ];
 
         const $ = (id) => document.getElementById(id);
@@ -4118,17 +4118,48 @@
             return AGENT_ROSTER.find(a => String(a.ext) === String(ext)) || null;
         }
 
-        function getScheduleForDate(agent, fecha = null) {
-            let dayNumber;
+        function getDayNumberForDate(fecha = null) {
             if (fecha) {
                 const [y, m, d] = fecha.split("-").map(Number);
-                dayNumber = new Date(y, m - 1, d).getDay();
-            } else {
-                dayNumber = new Date().getDay();
+                return new Date(y, m - 1, d).getDay();
             }
-            if (agent?.days) return agent.days[dayNumber] || null;
-            if (dayNumber === 6) return agent?.sabado ?? null;
-            return agent?.default ?? null;
+            return new Date().getDay();
+        }
+
+        function getSchedulePartForDate(agent, fecha, daysKey, defaultKey, saturdayKey) {
+            const dayNumber = getDayNumberForDate(fecha);
+            if (dayNumber === 0) return null;
+            if (agent?.[daysKey]) return agent[daysKey][dayNumber] || null;
+            if (dayNumber === 6) return agent?.[saturdayKey] ?? null;
+            return agent?.[defaultKey] ?? null;
+        }
+
+        function getScheduleForDate(agent, fecha = null) {
+            return getSchedulePartForDate(agent, fecha, "days", "default", "sabado");
+        }
+
+        function getScheduleEndForDate(agent, fecha = null) {
+            return getSchedulePartForDate(agent, fecha, "endDays", "endDefault", "endSabado");
+        }
+
+        function getScheduleLabelForDate(agent, fecha = null) {
+            const start = getScheduleForDate(agent, fecha);
+            const end = getScheduleEndForDate(agent, fecha);
+            if (!start) return null;
+            return end ? `${start} - ${end}` : start;
+        }
+
+        function getBathroomDepartureBlock(agent, fecha = todayKey()) {
+            const end = getScheduleEndForDate(agent, fecha);
+            const endMinutes = toMinutes(end);
+            if (endMinutes === null) return { blocked: false, end: null };
+
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            return {
+                blocked: currentMinutes >= endMinutes - 20,
+                end
+            };
         }
 
         function liveAccumulatedSeconds(record, target) {
@@ -4152,6 +4183,7 @@
         function getPunctualityInfo(record) {
             const agent = getRosterAgentByExt(record?.ext);
             const schedule = agent ? getScheduleForDate(agent, record?.fecha) : null;
+            const scheduleLabel = agent ? getScheduleLabelForDate(agent, record?.fecha) : null;
             const login = record?.login || "";
 
             if (!schedule) {
@@ -4159,26 +4191,26 @@
             }
 
             if (!login) {
-                return { key: "sinmarcar", label: "Sin marcar", color: "#cbd5e1", schedule, lateMinutes: 0 };
+                return { key: "sinmarcar", label: "Sin marcar", color: "#cbd5e1", schedule: scheduleLabel || schedule, lateMinutes: 0 };
             }
 
             const lm = toMinutes(login);
             const hm = toMinutes(schedule);
 
             if (lm === null || hm === null) {
-                return { key: "sinmarcar", label: "Hora inválida", color: "#fde68a", schedule, lateMinutes: 0 };
+                return { key: "sinmarcar", label: "Hora inválida", color: "#fde68a", schedule: scheduleLabel || schedule, lateMinutes: 0 };
             }
 
             if (lm <= hm) {
-                return { key: "puntual", label: "Puntual", color: "#bbf7d0", schedule, lateMinutes: 0 };
+                return { key: "puntual", label: "Puntual", color: "#bbf7d0", schedule: scheduleLabel || schedule, lateMinutes: 0 };
             }
 
             const late = lm - hm;
             if (late <= 5) {
-                return { key: "leve", label: `Retraso ${late} min`, color: "#fde68a", schedule, lateMinutes: late };
+                return { key: "leve", label: `Retraso ${late} min`, color: "#fde68a", schedule: scheduleLabel || schedule, lateMinutes: late };
             }
 
-            return { key: "retraso", label: `Retraso ${late} min`, color: "#fecaca", schedule, lateMinutes: late };
+            return { key: "retraso", label: `Retraso ${late} min`, color: "#fecaca", schedule: scheduleLabel || schedule, lateMinutes: late };
         }
 
         function buildRecordId(fecha, email) {
@@ -4418,6 +4450,12 @@
                 // 1. Identificar el género del agente actual
                 const miAgenteRoster = getRosterAgentByExt(currentProfile.ext);
                 const miGenero = miAgenteRoster ? miAgenteRoster.genero : null;
+
+                const salidaBlock = getBathroomDepartureBlock(miAgenteRoster);
+                if (salidaBlock.blocked) {
+                    showBathroomAlert(`No puedes ponerte en baño 20 minutos antes de tu salida (${salidaBlock.end}).`);
+                    return;
+                }
 
                 if (!miGenero) {
                     showToast("Error: No se ha configurado el género para este agente en el sistema.");
@@ -4760,7 +4798,7 @@
             if (agExt) agExt.textContent = currentProfile.ext || "-";
 
             const rosterAgent = getRosterAgentByExt(currentProfile.ext);
-            const schedule = rosterAgent ? getScheduleForDate(rosterAgent, todayKey()) : null;
+            const schedule = rosterAgent ? getScheduleLabelForDate(rosterAgent, todayKey()) : null;
             if (agHorario) agHorario.textContent = schedule || "No asignado";
 
             renderAgentProfilePhoto();
