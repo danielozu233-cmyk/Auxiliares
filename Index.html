@@ -3861,6 +3861,8 @@
         let pendingCloseFollowupItem = null;
         let accessPhotoBase64 = "";
         let accessPhotoMarkedForRemove = false;
+        let autoLoginCheckInFlight = false;
+        let lastAutoLoginCheckMs = 0;
         const toastEl = $("toast");
 
         function showToast(message, ms = 2800) {
@@ -4332,7 +4334,7 @@
             return snap.exists() ? snap.data() : null;
         }
 
-        async function ensureTodayRecordForProfile(profile) {
+        async function ensureTodayRecordForProfile(profile, markLogin = false) {
             if (!profile || !profile.email) return;
 
             // admin sin registro diario
@@ -4345,6 +4347,7 @@
 
             if (!snap.exists()) {
                 const payload = defaultRecord(profile, fecha);
+                if (markLogin) payload.login = nowTimeHM();
                 await setDoc(ref, payload);
             } else {
                 const data = snap.data();
@@ -4361,7 +4364,35 @@
                     mustPatch = true;
                 }
 
+                if (markLogin && !data.login && !data.logout) {
+                    patch.login = nowTimeHM();
+                    mustPatch = true;
+                }
+
                 if (mustPatch) await updateDoc(ref, patch);
+            }
+        }
+
+        async function checkAutoLoginForCurrentAgent(force = false) {
+            if (!currentProfile || currentProfile.rol !== "agent") return;
+            if (autoLoginCheckInFlight) return;
+
+            const storageKey = `autoLoginChecked_${todayKey()}_${emailKey(currentProfile.email)}`;
+            if (!force && localStorage.getItem(storageKey) === "ok") return;
+
+            const now = Date.now();
+            if (!force && now - lastAutoLoginCheckMs < 60000) return;
+
+            autoLoginCheckInFlight = true;
+            lastAutoLoginCheckMs = now;
+
+            try {
+                await ensureTodayRecordForProfile(currentProfile, true);
+                localStorage.setItem(storageKey, "ok");
+            } catch (error) {
+                console.error("Error al marcar login automático:", error);
+            } finally {
+                autoLoginCheckInFlight = false;
             }
         }
         async function ensureTodayRecordsForAllActiveUsers() {
@@ -5853,7 +5884,7 @@
             }
 
             if (currentProfile.rol === "agent") {
-                await ensureTodayRecordForProfile(currentProfile);
+                await checkAutoLoginForCurrentAgent();
                 await subscribeAgentFollowups();
                 renderAgentView();
             }
@@ -5889,6 +5920,15 @@
                 setVisible($("loginView"), true);
                 setVisible($("appView"), false);
             }
+        });
+
+        window.addEventListener("focus", () => checkAutoLoginForCurrentAgent());
+        window.addEventListener("pageshow", () => checkAutoLoginForCurrentAgent());
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) checkAutoLoginForCurrentAgent();
+        });
+        ["click", "keydown", "touchstart"].forEach(evt => {
+            document.addEventListener(evt, () => checkAutoLoginForCurrentAgent(), { passive: true });
         });
 
         // Eventos base
