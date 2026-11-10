@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101426">
-  <meta http-equiv="refresh" content="8;url=https://auxiliares-upana.web.app/">
+  <meta http-equiv="refresh" content="20;url=https://auxiliares-upana.web.app/">
   <title>Nos mudamos | Auxiliares</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       min-height: 100vh;
@@ -31,10 +33,10 @@
       gap: 30px;
       align-items: center;
       padding: clamp(22px, 5vw, 42px);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 1px solid rgba(255, 255, 255, .14);
       border-radius: 26px;
       background: rgba(18, 25, 44, .9);
-      box-shadow: 0 28px 90px rgba(0,0,0,.45);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .45);
     }
 
     .gif {
@@ -82,7 +84,9 @@
       transition: transform .18s ease;
     }
 
-    .button:hover { transform: translateY(-2px); }
+    .button:hover {
+      transform: translateY(-2px);
+    }
 
     .count {
       margin-top: 14px;
@@ -95,7 +99,7 @@
       margin-top: 9px;
       overflow: hidden;
       border-radius: 99px;
-      background: rgba(255,255,255,.1);
+      background: rgba(255, 255, 255, .1);
     }
 
     .progress {
@@ -103,18 +107,31 @@
       height: 100%;
       background: linear-gradient(90deg, #9eafff, #e3aaff);
       transform-origin: left;
-      animation: countdown 7s linear forwards;
+      animation: countdown 20s linear forwards;
     }
 
-    @keyframes countdown { to { transform: scaleX(0); } }
+    @keyframes countdown {
+      to {
+        transform: scaleX(0);
+      }
+    }
 
     @media (max-width: 600px) {
-      .card { grid-template-columns: 1fr; gap: 20px; }
-      .gif { width: min(210px, 70vw); margin: auto; }
+      .card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .gif {
+        width: min(210px, 70vw);
+        margin: auto;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+      *,
+      *::before,
+      *::after {
         animation-duration: .01ms !important;
         transition-duration: .01ms !important;
       }
@@ -127,15 +144,17 @@
     <img
       class="gif"
       src="https://i.giphy.com/FaFu1s2hO1xYHdpk6N.webp"
-      alt="Un gatito tratando de resolver muchos errores"
+      alt="Ventanas de error por todas partes"
     >
 
     <section>
       <div class="eyebrow">Aviso de mudanza digital</div>
-      <h1>Nos mudamos.<br>El gatito ya reinició el router.</h1>
+
+      <h1>Nos mudamos.<br>Este enlace ya está jubilado.</h1>
+
       <p>
-        Este enlace quedó en el pasado (pero con mucho cariño).
-        Te llevamos a la nueva página en un momentito.
+        La página ahora tiene una nueva dirección.
+        Puedes esperar un momento o ir directamente con el botón.
       </p>
 
       <a class="button" href="https://auxiliares-upana.web.app/">
@@ -143,27 +162,32 @@
       </a>
 
       <div class="count">
-        Redirigiendo en <span id="seconds">7</span> segundos…
+        Redirigiendo en <span id="seconds">20</span> segundos…
       </div>
-      <div class="track" aria-hidden="true"><div class="progress"></div></div>
+
+      <div class="track" aria-hidden="true">
+        <div class="progress"></div>
+      </div>
     </section>
   </main>
 
   <script>
     const newPage = "https://auxiliares-upana.web.app/";
-    let secondsLeft = 7;
+    let secondsLeft = 20;
     const secondsLabel = document.getElementById("seconds");
 
     const countdown = setInterval(() => {
       secondsLeft -= 1;
       secondsLabel.textContent = secondsLeft;
 
-      if (secondsLeft <= 0) clearInterval(countdown);
+      if (secondsLeft <= 0) {
+        clearInterval(countdown);
+      }
     }, 1000);
 
     setTimeout(() => {
       window.location.replace(newPage);
-    }, 7000);
+    }, 20000);
   </script>
 </body>
 </html>
